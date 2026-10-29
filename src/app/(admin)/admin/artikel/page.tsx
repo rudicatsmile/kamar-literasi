@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { AdminArtikelListClient } from "./artikel-list-client";
 import { dummyArticles, Article } from "@/lib/dummy-data";
 
@@ -6,10 +6,10 @@ export default async function AdminArtikelPage() {
   let articles: Article[] = dummyArticles;
 
   try {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("articles")
-      .select("*, categories(name, slug), profiles(full_name)")
+      .select("*, categories(name, slug), profiles(full_name, avatar_url, role)")
       .order("created_at", { ascending: false });
 
     if (!error && data && data.length > 0) {
@@ -23,9 +23,15 @@ export default async function AdminArtikelPage() {
         category_id: item.category_id,
         category_name: item.categories?.name || "Umum",
         category_slug: item.categories?.slug || "umum",
+        author_id: item.author_id,
         author_name: item.profiles?.full_name || "Admin Redaksi",
-        author_role: "Penulis Redaksi",
-        author_avatar: dummyArticles[0].author_avatar,
+        author_role:
+          item.profiles?.role === "admin"
+            ? "Redaksi"
+            : item.profiles?.role === "member"
+            ? "Penulis Tamu"
+            : "Penulis Redaksi",
+        author_avatar: item.profiles?.avatar_url || null,
         status: item.status,
         reading_time: item.reading_time || 3,
         published_at: item.published_at || item.created_at,

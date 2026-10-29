@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -16,6 +17,13 @@ import { getArticleBySlug, getArticles } from "@/lib/data";
 import { dummyArticles } from "@/lib/dummy-data";
 import { ShareButtons } from "./share-buttons";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/json-ld";
+
+function getInitials(name: string) {
+  if (!name) return "U";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 export async function generateStaticParams() {
   const articles = await getArticles();
@@ -134,11 +142,22 @@ export default async function DetailArtikelPage({
           {/* Author & Meta */}
           <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-b border-border py-4">
             <div className="flex items-center gap-3">
-              <img
-                src={article.author_avatar}
-                alt={article.author_name}
-                className="h-10 w-10 rounded-full object-cover border border-border"
-              />
+              {article.author_avatar ? (
+                <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden border border-border shadow-xs bg-muted">
+                  <Image
+                    src={article.author_avatar}
+                    alt={article.author_name}
+                    fill
+                    sizes="40px"
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+              ) : (
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-xs border border-primary/20 uppercase tracking-wider">
+                  {getInitials(article.author_name)}
+                </div>
+              )}
               <div>
                 <p className="text-sm font-semibold text-foreground">
                   {article.author_name}

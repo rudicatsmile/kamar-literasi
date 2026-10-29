@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { isValidUUID } from "@/lib/utils";
 
@@ -15,6 +16,7 @@ const ArticleSchema = z.object({
   cover_url: z.string().optional(),
   category_id: z.string().min(1, "Kategori wajib dipilih."),
   status: z.enum(["draft", "published"]).default("draft"),
+  author_id: z.string().optional().nullable(),
 });
 
 export async function saveArticleAction(data: z.infer<typeof ArticleSchema>) {
@@ -26,8 +28,17 @@ export async function saveArticleAction(data: z.infer<typeof ArticleSchema>) {
     };
   }
 
-  const { id, title, slug, excerpt, content: rawContent, cover_url, category_id, status } =
-    validation.data;
+  const {
+    id,
+    title,
+    slug,
+    excerpt,
+    content: rawContent,
+    cover_url,
+    category_id,
+    status,
+    author_id,
+  } = validation.data;
 
   // Sanitize rich text HTML
   const content = sanitizeHtml(rawContent);
@@ -42,10 +53,16 @@ export async function saveArticleAction(data: z.infer<typeof ArticleSchema>) {
 
   if (isSupabaseConfigured) {
     const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const adminClient = createAdminClient();
+    const authorIdToSave = author_id || user?.id || null;
 
     if (id) {
       // Update
-      const { error } = await supabase
+      const { error } = await adminClient
         .from("articles")
         .update({
           title,
@@ -56,6 +73,7 @@ export async function saveArticleAction(data: z.infer<typeof ArticleSchema>) {
           category_id,
           status,
           reading_time,
+          ...(authorIdToSave ? { author_id: authorIdToSave } : {}),
           updated_at: new Date().toISOString(),
           ...(status === "published"
             ? { published_at: new Date().toISOString() }
@@ -66,13 +84,14 @@ export async function saveArticleAction(data: z.infer<typeof ArticleSchema>) {
       if (error) return { success: false, error: error.message };
     } else {
       // Insert
-      const { error } = await supabase.from("articles").insert({
+      const { error } = await adminClient.from("articles").insert({
         title,
         slug,
         excerpt,
         content,
         cover_url,
         category_id,
+        author_id: authorIdToSave,
         status,
         reading_time,
         published_at:
@@ -83,7 +102,9 @@ export async function saveArticleAction(data: z.infer<typeof ArticleSchema>) {
     }
   }
 
+  revalidatePath("/");
   revalidatePath("/artikel");
+  revalidatePath(`/artikel/${slug}`);
   revalidatePath("/admin/artikel");
   return { success: true };
 }

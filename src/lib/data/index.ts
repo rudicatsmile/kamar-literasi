@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import {
   dummyArticles,
   dummyCategories,
@@ -62,10 +63,10 @@ export async function getArticles(categorySlug?: string, query?: string): Promis
   }
 
   try {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     let q = supabase
       .from("articles")
-      .select("*, categories(name, slug), profiles(full_name, avatar_url)")
+      .select("*, categories(name, slug), profiles(full_name, avatar_url, role)")
       .eq("status", "published")
       .order("published_at", { ascending: false });
 
@@ -87,10 +88,15 @@ export async function getArticles(categorySlug?: string, query?: string): Promis
         category_id: item.category_id,
         category_name: item.categories?.name || "Umum",
         category_slug: item.categories?.slug || "umum",
+        author_id: item.author_id,
         author_name: item.profiles?.full_name || "Admin Redaksi",
-        author_role: "Penulis Redaksi",
-        author_avatar:
-          item.profiles?.avatar_url || dummyArticles[0].author_avatar,
+        author_role:
+          item.profiles?.role === "admin"
+            ? "Redaksi"
+            : item.profiles?.role === "member"
+            ? "Penulis Tamu"
+            : "Penulis Redaksi",
+        author_avatar: item.profiles?.avatar_url || null,
         status: item.status,
         reading_time: item.reading_time || 3,
         published_at: item.published_at || item.created_at,
@@ -110,10 +116,10 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
   if (!isSupabaseLive()) return foundDummy || null;
 
   try {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("articles")
-      .select("*, categories(name, slug), profiles(full_name, avatar_url)")
+      .select("*, categories(name, slug), profiles(full_name, avatar_url, role)")
       .eq("slug", slug)
       .single();
 
@@ -129,10 +135,15 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
       category_id: data.category_id,
       category_name: data.categories?.name || "Umum",
       category_slug: data.categories?.slug || "umum",
+      author_id: data.author_id,
       author_name: data.profiles?.full_name || "Admin Redaksi",
-      author_role: "Penulis Redaksi",
-      author_avatar:
-        data.profiles?.avatar_url || dummyArticles[0].author_avatar,
+      author_role:
+        data.profiles?.role === "admin"
+          ? "Redaksi"
+          : data.profiles?.role === "member"
+          ? "Penulis Tamu"
+          : "Penulis Redaksi",
+      author_avatar: data.profiles?.avatar_url || null,
       status: data.status,
       reading_time: data.reading_time || 3,
       published_at: data.published_at || data.created_at,

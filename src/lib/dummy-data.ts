@@ -18,7 +18,7 @@ export interface Article {
   author_id?: string;
   author_name: string;
   author_role: string;
-  author_avatar: string;
+  author_avatar?: string | null;
   status: "draft" | "published";
   reading_time: number;
   published_at: string;

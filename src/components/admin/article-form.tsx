@@ -53,6 +53,9 @@ export function ArticleForm({
   const [authorName, setAuthorName] = React.useState(
     initialData?.author_name || "Dewi Lestari"
   );
+  const [authorId, setAuthorId] = React.useState(
+    initialData?.author_id || ""
+  );
   const [status, setStatus] = React.useState<"draft" | "published">(
     initialData?.status || "published"
   );
@@ -118,6 +121,7 @@ export function ArticleForm({
       cover_url: coverUrl,
       category_id: categoryId,
       status: publishStatus,
+      author_id: authorId || undefined,
     });
 
     if (!result.success && result.error) {

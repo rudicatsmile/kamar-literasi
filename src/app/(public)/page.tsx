@@ -1,4 +1,12 @@
+import Image from "next/image";
 import Link from "next/link";
+
+function getInitials(name: string) {
+  if (!name) return "U";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 import {
   ArrowRight,
   BookOpen,
@@ -202,12 +210,22 @@ export default async function HomePage() {
 
                   <div className="mt-auto pt-6 flex items-center justify-between border-t border-border">
                     <div className="flex items-center gap-2.5">
-                      <img
-                        src={article.author_avatar}
-                        alt={article.author_name}
-                        className="h-7 w-7 rounded-full object-cover"
-                      />
-                      <span className="text-xs font-medium text-foreground">
+                      {article.author_avatar ? (
+                        <div className="relative h-7 w-7 shrink-0 rounded-full overflow-hidden border border-border shadow-2xs bg-muted">
+                          <Image
+                            src={article.author_avatar}
+                            alt={article.author_name}
+                            fill
+                            sizes="28px"
+                            className="object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-[10px] border border-primary/20 uppercase tracking-wider">
+                          {getInitials(article.author_name)}
+                        </div>
+                      )}
+                      <span className="text-xs font-medium text-foreground truncate max-w-[140px]">
                         {article.author_name}
                       </span>
                     </div>
