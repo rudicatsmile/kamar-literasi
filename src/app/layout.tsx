@@ -17,7 +17,7 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://masyarakatliterasi.id";
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://rumahliterasi.web.id";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),

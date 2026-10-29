@@ -8,6 +8,7 @@ import {
   sendDoubleOptInConfirmation,
 } from "@/lib/whatsapp";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { isValidUUID } from "@/lib/utils";
 
 export async function subscribeNewsletterAction(
   rawPhone: string,
@@ -145,6 +146,14 @@ export async function unsubscribeAction(identifier: string) {
 }
 
 export async function deleteSubscriberAction(id: string) {
+  if (!id) return { success: false, error: "ID subscriber tidak valid." };
+
+  // If not a valid UUID (e.g. legacy/mock ID 'sub-1'), safely return success
+  if (!isValidUUID(id)) {
+    revalidatePath("/admin/subscriber");
+    return { success: true };
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const isSupabaseConfigured =
     supabaseUrl.includes("supabase.co") && !supabaseUrl.includes("dummy-project");

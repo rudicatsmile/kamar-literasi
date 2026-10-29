@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { isValidUUID } from "@/lib/utils";
 
 const ResourceSchema = z.object({
   id: z.string().optional(),
@@ -86,6 +87,14 @@ export async function saveResourceAction(data: z.infer<typeof ResourceSchema>) {
 }
 
 export async function deleteResourceAction(id: string) {
+  if (!id) return { success: false, error: "ID resource tidak valid." };
+
+  if (!isValidUUID(id)) {
+    revalidatePath("/resource");
+    revalidatePath("/admin/resource");
+    return { success: true };
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const isSupabaseConfigured =
     supabaseUrl.includes("supabase.co") && !supabaseUrl.includes("dummy-project");
@@ -102,6 +111,10 @@ export async function deleteResourceAction(id: string) {
 }
 
 export async function toggleFavoriteResourceAction(resourceId: string) {
+  if (!isValidUUID(resourceId)) {
+    return { success: true, isFavorited: false };
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const isSupabaseConfigured =
     supabaseUrl.includes("supabase.co") && !supabaseUrl.includes("dummy-project");

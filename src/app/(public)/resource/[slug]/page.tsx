@@ -39,7 +39,7 @@ export async function generateMetadata({
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://masyarakatliterasi.id";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://rumahliterasi.web.id";
   const url = `${baseUrl}/resource/${resource.slug}`;
 
   return {
@@ -86,7 +86,7 @@ export default async function DetailResourcePage({
     .filter((r) => r.id !== resource.id)
     .slice(0, 3);
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://masyarakatliterasi.id";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://rumahliterasi.web.id";
 
   return (
     <div className="py-12 md:py-20 bg-background min-h-screen">

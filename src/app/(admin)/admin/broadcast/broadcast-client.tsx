@@ -37,7 +37,7 @@ export function AdminBroadcastClient({
   const [broadcasts, setBroadcasts] = React.useState<Broadcast[]>(initialBroadcasts);
   const [title, setTitle] = React.useState("");
   const [message, setMessage] = React.useState(
-    "Halo Sahabat Literasi! Jangan lewatkan esai pilihan pekan ini tentang membangun nalar kritis keluarga di era informasi cepat. Baca selengkapnya di https://masyarakatliterasi.id"
+    "Halo Sahabat Literasi! Jangan lewatkan esai pilihan pekan ini tentang membangun nalar kritis keluarga di era informasi cepat. Baca selengkapnya di https://rumahliterasi.web.id"
   );
   const [isSending, setIsSending] = React.useState(false);
 
@@ -62,7 +62,7 @@ export function AdminBroadcastClient({
 
       toast.success(
         res?.message ||
-          `Siaran WhatsApp "${title}" berhasil dikirim ke nomor subscriber aktif!`
+        `Siaran WhatsApp "${title}" berhasil dikirim ke nomor subscriber aktif!`
       );
       setTitle("");
       router.refresh();
@@ -244,12 +244,12 @@ export function AdminBroadcastClient({
                     <TableCell className="text-xs text-muted-foreground">
                       {bc.sent_at
                         ? new Date(bc.sent_at).toLocaleDateString("id-ID", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
                         : "-"}
                     </TableCell>
                   </TableRow>

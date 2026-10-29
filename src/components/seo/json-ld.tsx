@@ -5,8 +5,8 @@ export function OrganizationJsonLd() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Masyarakat Literasi",
-    url: "https://masyarakatliterasi.id",
-    logo: "https://masyarakatliterasi.id/logo.png",
+    url: "https://rumahliterasi.web.id",
+    logo: "https://rumahliterasi.web.id/logo.png",
     description:
       "Gerakan independen untuk menumbuhkan kecintaan membaca, nalar kritis, dan literasi digital di Indonesia.",
     sameAs: [
@@ -47,7 +47,7 @@ export function ArticleJsonLd({
       "@type": "WebPage",
       "@id": url,
     },
-    image: imageUrl || "https://masyarakatliterasi.id/og-image.jpg",
+    image: imageUrl || "https://rumahliterasi.web.id/og-image.jpg",
     datePublished: datePublished,
     author: {
       "@type": "Person",
@@ -58,7 +58,7 @@ export function ArticleJsonLd({
       name: "Masyarakat Literasi",
       logo: {
         "@type": "ImageObject",
-        url: "https://masyarakatliterasi.id/logo.png",
+        url: "https://rumahliterasi.web.id/logo.png",
       },
     },
   };

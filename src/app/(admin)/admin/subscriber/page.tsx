@@ -1,9 +1,9 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { AdminSubscriberClient } from "./subscriber-client";
-import { dummySubscribers, Subscriber } from "@/lib/dummy-data";
+import { Subscriber } from "@/lib/dummy-data";
 
 export default async function AdminSubscriberPage() {
-  let subscribers: Subscriber[] = dummySubscribers;
+  let subscribers: Subscriber[] = [];
 
   try {
     const supabase = createAdminClient();
@@ -12,7 +12,7 @@ export default async function AdminSubscriberPage() {
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (!error && data && data.length > 0) {
+    if (!error && data) {
       subscribers = data.map((s: any) => ({
         id: s.id,
         whatsapp: s.whatsapp,
@@ -24,8 +24,9 @@ export default async function AdminSubscriberPage() {
         created_at: s.created_at,
       }));
     }
-  } catch {
-    subscribers = dummySubscribers;
+  } catch (e) {
+    console.error("Gagal mengambil data subscriber:", e);
+    subscribers = [];
   }
 
   return <AdminSubscriberClient initialSubscribers={subscribers} />;

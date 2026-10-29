@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { isValidUUID } from "@/lib/utils";
 
 const ChallengeSchema = z.object({
   id: z.string().optional(),
@@ -71,6 +72,14 @@ export async function saveChallengeAction(data: z.infer<typeof ChallengeSchema>)
 }
 
 export async function deleteChallengeAction(id: string) {
+  if (!id) return { success: false, error: "ID tantangan tidak valid." };
+
+  if (!isValidUUID(id)) {
+    revalidatePath("/mulai-sekarang");
+    revalidatePath("/admin/tantangan");
+    return { success: true };
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const isSupabaseConfigured =
     supabaseUrl.includes("supabase.co") && !supabaseUrl.includes("dummy-project");

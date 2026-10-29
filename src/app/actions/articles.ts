@@ -4,6 +4,7 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { isValidUUID } from "@/lib/utils";
 
 const ArticleSchema = z.object({
   id: z.string().optional(),
@@ -88,6 +89,14 @@ export async function saveArticleAction(data: z.infer<typeof ArticleSchema>) {
 }
 
 export async function deleteArticleAction(id: string) {
+  if (!id) return { success: false, error: "ID artikel tidak valid." };
+
+  if (!isValidUUID(id)) {
+    revalidatePath("/artikel");
+    revalidatePath("/admin/artikel");
+    return { success: true };
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const isSupabaseConfigured =
     supabaseUrl.includes("supabase.co") && !supabaseUrl.includes("dummy-project");

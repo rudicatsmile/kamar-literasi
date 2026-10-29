@@ -4,6 +4,7 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { isValidUUID } from "@/lib/utils";
 
 const ContactSchema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter."),
@@ -63,6 +64,11 @@ export async function submitContactMessageAction(data: z.infer<typeof ContactSch
 }
 
 export async function markContactMessageReadAction(id: string, isRead: boolean) {
+  if (!isValidUUID(id)) {
+    revalidatePath("/admin/pesan");
+    return { success: true };
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const isSupabaseConfigured =
     supabaseUrl.includes("supabase.co") && !supabaseUrl.includes("dummy-project");
@@ -77,6 +83,13 @@ export async function markContactMessageReadAction(id: string, isRead: boolean) 
 }
 
 export async function deleteContactMessageAction(id: string) {
+  if (!id) return { success: false, error: "ID pesan tidak valid." };
+
+  if (!isValidUUID(id)) {
+    revalidatePath("/admin/pesan");
+    return { success: true };
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const isSupabaseConfigured =
     supabaseUrl.includes("supabase.co") && !supabaseUrl.includes("dummy-project");

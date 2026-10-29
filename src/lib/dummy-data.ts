@@ -695,7 +695,7 @@ export const dummyUserProfile = {
 
 export const dummySubscribers: Subscriber[] = [
   {
-    id: "sub-1",
+    id: "a0000000-0000-0000-0000-000000000001",
     whatsapp: "6281234567890",
     name: "Siti Rahmawati",
     email: "siti@contoh.id",
@@ -704,7 +704,7 @@ export const dummySubscribers: Subscriber[] = [
     confirmed_at: "2026-10-01T10:05:00Z",
   },
   {
-    id: "sub-2",
+    id: "a0000000-0000-0000-0000-000000000002",
     whatsapp: "6281398765432",
     name: "Budi Santoso",
     email: "budi.s@contoh.id",
@@ -713,14 +713,14 @@ export const dummySubscribers: Subscriber[] = [
     confirmed_at: "2026-10-03T14:22:00Z",
   },
   {
-    id: "sub-3",
+    id: "a0000000-0000-0000-0000-000000000003",
     whatsapp: "6285712344321",
     name: "Dewi Lestari",
     status: "pending",
     created_at: "2026-10-26T08:10:00Z",
   },
   {
-    id: "sub-4",
+    id: "a0000000-0000-0000-0000-000000000004",
     whatsapp: "6287811223344",
     name: "Andi Pratama",
     email: "andi@contoh.id",
@@ -729,7 +729,7 @@ export const dummySubscribers: Subscriber[] = [
     confirmed_at: "2026-09-15T09:02:00Z",
   },
   {
-    id: "sub-5",
+    id: "a0000000-0000-0000-0000-000000000005",
     whatsapp: "6282199887766",
     name: "Nur Hidayah",
     status: "active",
@@ -740,7 +740,7 @@ export const dummySubscribers: Subscriber[] = [
 
 export const dummyBroadcasts: Broadcast[] = [
   {
-    id: "bc-1",
+    id: "a1000000-0000-0000-0000-000000000001",
     title: "Buletin Literasi Edisi Oktober 2026",
     message: "Halo Sahabat Literasi! Edisi kali ini membahas 5 langkah jitu mengenali hoaks di linimasa keluarga dan pengumuman tantangan 7 hari membaca edisi November. Simak ulasan lengkapnya di website!",
     created_by_name: "Admin Masyarakat Literasi",
@@ -750,7 +750,7 @@ export const dummyBroadcasts: Broadcast[] = [
     created_at: "2026-10-20T08:30:00Z",
   },
   {
-    id: "bc-2",
+    id: "a1000000-0000-0000-0000-000000000002",
     title: "Pengingat: Evaluasi Pekan Membaca Nasional",
     message: "Sudahkah Anda membaca 10 halaman hari ini? Jangan biarkan streak tantangan Anda terputus. Klik tautan berikut untuk check-in sekarang!",
     created_by_name: "Admin Masyarakat Literasi",
@@ -763,7 +763,7 @@ export const dummyBroadcasts: Broadcast[] = [
 
 export const dummyContactMessages: ContactMessage[] = [
   {
-    id: "msg-1",
+    id: "a2000000-0000-0000-0000-000000000001",
     name: "Farhan Hakim",
     email: "farhan.hakim@sekolahkita.sch.id",
     subject: "Kolaborasi Pelatihan Literasi Guru",
@@ -772,7 +772,7 @@ export const dummyContactMessages: ContactMessage[] = [
     created_at: "2026-10-27T10:15:00Z",
   },
   {
-    id: "msg-2",
+    id: "a2000000-0000-0000-0000-000000000002",
     name: "Ratna Sari",
     email: "ratna.sari@komunitasbaca.org",
     subject: "Donasi Buku untuk Taman Bacaan Desa",

@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { getArticles, getResources, getChallenges } from "@/lib/data";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://masyarakatliterasi.id";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://rumahliterasi.web.id";
 
   // Static routes
   const staticRoutes: MetadataRoute.Sitemap = [

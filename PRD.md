@@ -601,7 +601,7 @@ WHATSAPP_SEND_DELAY_SECONDS=3
 CRON_SECRET=random-long-secret
 
 # Analytics
-NEXT_PUBLIC_PLAUSIBLE_DOMAIN=masyarakatliterasi.id
+NEXT_PUBLIC_PLAUSIBLE_DOMAIN=rumahliterasi.web.id
 ```
 
 ---

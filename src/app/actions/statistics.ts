@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { isValidUUID } from "@/lib/utils";
 
 const StatisticSchema = z.object({
   id: z.string().optional(),
@@ -74,6 +75,14 @@ export async function saveStatisticAction(data: z.infer<typeof StatisticSchema>)
 }
 
 export async function deleteStatisticAction(id: string) {
+  if (!id) return { success: false, error: "ID statistik tidak valid." };
+
+  if (!isValidUUID(id)) {
+    revalidatePath("/statistik");
+    revalidatePath("/admin/statistik");
+    return { success: true };
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const isSupabaseConfigured =
     supabaseUrl.includes("supabase.co") && !supabaseUrl.includes("dummy-project");
@@ -90,6 +99,12 @@ export async function deleteStatisticAction(id: string) {
 }
 
 export async function toggleStatisticActiveAction(id: string, currentState: boolean) {
+  if (!isValidUUID(id)) {
+    revalidatePath("/statistik");
+    revalidatePath("/admin/statistik");
+    return { success: true };
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const isSupabaseConfigured =
     supabaseUrl.includes("supabase.co") && !supabaseUrl.includes("dummy-project");
