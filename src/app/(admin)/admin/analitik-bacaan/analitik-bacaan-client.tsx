@@ -25,6 +25,7 @@ import {
   TrendingDown,
   TrendingUp,
   Users,
+  Trash2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +52,10 @@ import {
   ArticleReadingPerformance,
   ReadingFunnelStage,
 } from "@/lib/reading-analytics-types";
-import { getReadingAnalyticsSummary } from "@/app/actions/reading-analytics";
+import {
+  getReadingAnalyticsSummary,
+  clearAllReadingSessionsAction,
+} from "@/app/actions/reading-analytics";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -102,6 +106,33 @@ export function AnalitikBacaanClient({
       toast.success("Data analitik membaca berhasil disinkronkan langsung dari database.");
     } catch {
       toast.error("Gagal menyegarkan data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClearSessions = async () => {
+    if (
+      !confirm(
+        "Apakah Anda yakin ingin mengosongkan seluruh rekaman data sesi membaca di Supabase?\n\nPerhatian: Pastikan tab artikel di browser sudah ditutup agar tab yang sedang aktif tidak mengirimkan beacon ulang."
+      )
+    ) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await clearAllReadingSessionsAction();
+      if (res.success) {
+        toast.success("Seluruh sesi membaca berhasil dikosongkan (Total Sesi = 0).");
+        const refreshed = await getReadingAnalyticsSummary(timeRange);
+        setData(refreshed);
+        router.refresh();
+      } else {
+        toast.error(res.error || "Gagal mengosongkan data sesi.");
+      }
+    } catch {
+      toast.error("Terjadi kendala saat mengosongkan data.");
     } finally {
       setLoading(false);
     }
@@ -204,6 +235,20 @@ export function AnalitikBacaanClient({
             />
             <span>Segarkan</span>
           </Button>
+
+          {data.totalSessions > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleClearSessions}
+              disabled={loading}
+              className="gap-1.5 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20"
+              title="Kosongkan seluruh data sesi membaca di Supabase"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              <span>Kosongkan Sesi</span>
+            </Button>
+          )}
 
           <Link href="/admin/artikel">
             <Button variant="secondary" size="sm" className="gap-1.5 text-xs">

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   ReadingAnalyticsSummary,
@@ -305,5 +306,28 @@ export async function getReadingAnalyticsSummary(
       timeRange,
       isLive: false,
     };
+  }
+}
+
+export async function clearAllReadingSessionsAction(): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  try {
+    const supabase = createAdminClient();
+    const { error } = await supabase
+      .from("article_reading_sessions")
+      .delete()
+      .neq("id", "00000000-0000-0000-0000-000000000000");
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath("/admin/analitik-bacaan");
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || "Gagal mengosongkan data." };
   }
 }
