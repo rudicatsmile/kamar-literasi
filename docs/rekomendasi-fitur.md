@@ -12,7 +12,7 @@
 1. [Visi & Latar Belakang Pengembangan](#1-visi--latar-belakang-pengembangan)
 2. [Fitur Powerfull untuk User (Pembaca & Member)](#2-fitur-powerfull-untuk-user-pembaca--member)
    - [2.1 Sertifikat Kelulusan Tantangan & Social Sharing Card](#21-sertifikat-kelulusan-tantangan--social-sharing-card)
-   - [2.2 Mode Membaca Fokus (Zen Mode) & Kustomisasi Tipografi](#22-mode-membaca-fokus-zen-mode--kustomisasi-tipografi)
+   - [2.2 Mode Membaca Fokus (Zen Mode) & Kustomisasi Tipografi](#22-mode-membaca-fokus-zen-mode--kustomisasi-tipografi) OK
    - [2.3 Pemutar Audio Esai (Text-to-Speech Audio Reader)](#23-pemutar-audio-esai-text-to-speech-audio-reader)
    - [2.4 Ruang Refleksi Pembaca (Contextual Reader Reflections)](#24-ruang-refleksi-pembaca-contextual-reader-reflections)
    - [2.5 Lemari Baca Pribadi (Reading List, Bookmark & Habit Tracker)](#25-lemari-baca-pribadi-reading-list-bookmark--habit-tracker)
@@ -20,7 +20,7 @@
    - [3.1 AI Editorial Assistant (Integrasi Google Gemini)](#31-ai-editorial-assistant-integrasi-google-gemini)
    - [3.2 WhatsApp Two-Way Interactive Automation](#32-whatsapp-two-way-interactive-automation)
    - [3.3 Pipeline Pengajuan Naskah Penulis Tamu (Guest Contributor Workflow)](#33-pipeline-pengajuan-naskah-penulis-tamu-guest-contributor-workflow)
-   - [3.4 Analitik Perilaku Membaca Mendalam (Reading Drop-off Analytics)](#34-analitik-perilaku-membaca-mendalam-reading-drop-off-analytics)
+   - [3.4 Analitik Perilaku Membaca Mendalam (Reading Drop-off Analytics)](#34-analitik-perilaku-membaca-mendalam-reading-drop-off-analytics) OK
    - [3.5 Modul Cadangan & Ekspor Sekali Klik (Disaster Recovery Engine)](#35-modul-cadangan--ekspor-sekali-klik-disaster-recovery-engine)
 4. [Matriks Prioritas: Dampak vs Kompleksitas](#4-matriks-prioritas-dampak-vs-kompleksitas)
 5. [Skema Database Pendukung](#5-skema-database-pendukung)
