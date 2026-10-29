@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter, Playfair_Display } from "next/font/google";
+import {
+  Inter,
+  Literata,
+  Playfair_Display,
+  Plus_Jakarta_Sans,
+} from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { OrganizationJsonLd } from "@/components/seo/json-ld";
+import { READING_BOOTSTRAP_SCRIPT } from "@/components/reading/reading-mode-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -14,6 +20,20 @@ const inter = Inter({
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
+  display: "swap",
+});
+
+// Opsi "Serif Klasik" pada kustomisasi tipografi mode baca
+const literata = Literata({
+  subsets: ["latin"],
+  variable: "--font-literata",
+  display: "swap",
+});
+
+// Opsi "Sans-serif Modern" pada kustomisasi tipografi mode baca
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
   display: "swap",
 });
 
@@ -88,9 +108,17 @@ export default function RootLayout({
   const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
 
   return (
-    <html lang="id" className={`${inter.variable} ${playfair.variable} h-full antialiased`}>
+    <html
+      lang="id"
+      // Skrip bootstrap mode baca mengubah atribut/style elemen ini sebelum
+      // hydration; React tidak boleh menimpa atau memperbandingkannya.
+      suppressHydrationWarning
+      className={`${inter.variable} ${playfair.variable} ${literata.variable} ${plusJakarta.variable} h-full antialiased`}
+    >
       <head>
         <OrganizationJsonLd />
+        {/* Terapkan preferensi mode baca sebelum paint agar tidak kedip */}
+        <script dangerouslySetInnerHTML={{ __html: READING_BOOTSTRAP_SCRIPT }} />
         {plausibleDomain && (
           <Script
             defer

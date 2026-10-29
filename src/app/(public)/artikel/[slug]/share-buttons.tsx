@@ -39,7 +39,7 @@ export function ShareButtons({ title }: { title: string }) {
         variant="outline"
         size="sm"
         onClick={handleWhatsAppShare}
-        className="text-xs h-8 gap-1.5"
+        className="text-xs h-8 gap-1.5 bg-rd-surface border-rd-border text-rd-fg hover:bg-rd-border hover:text-rd-fg"
       >
         <span>WhatsApp</span>
       </Button>
@@ -47,7 +47,7 @@ export function ShareButtons({ title }: { title: string }) {
         variant="outline"
         size="sm"
         onClick={handleTwitterShare}
-        className="text-xs h-8 gap-1.5"
+        className="text-xs h-8 gap-1.5 bg-rd-surface border-rd-border text-rd-fg hover:bg-rd-border hover:text-rd-fg"
       >
         <span>X / Twitter</span>
       </Button>
@@ -55,11 +55,11 @@ export function ShareButtons({ title }: { title: string }) {
         variant="outline"
         size="sm"
         onClick={handleCopyLink}
-        className="text-xs h-8 gap-1.5"
+        className="text-xs h-8 gap-1.5 bg-rd-surface border-rd-border text-rd-fg hover:bg-rd-border hover:text-rd-fg"
       >
         {copied ? (
           <>
-            <Check className="h-3.5 w-3.5 text-primary" />
+            <Check className="h-3.5 w-3.5 text-rd-accent" />
             <span>Tersalin</span>
           </>
         ) : (

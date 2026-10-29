@@ -8,7 +8,10 @@ export async function Footer() {
   const footer = await getFooterSettings();
 
   return (
-    <footer className="mt-auto border-t border-border bg-surface text-foreground">
+    <footer
+      data-zen-chrome="bottom"
+      className="mt-auto border-t border-border bg-surface text-foreground"
+    >
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
           {/* Brand & Mission Statement (Dynamic from Database) */}

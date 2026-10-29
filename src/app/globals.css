@@ -48,8 +48,19 @@
   --color-destructive-foreground: hsl(var(--destructive-foreground));
   --color-ring: hsl(var(--ring));
 
+  /* Token Mode Baca (Zen Mode & Kustomisasi Tipografi) */
+  --color-rd-bg: hsl(var(--rd-bg));
+  --color-rd-surface: hsl(var(--rd-surface));
+  --color-rd-fg: hsl(var(--rd-fg));
+  --color-rd-muted: hsl(var(--rd-muted));
+  --color-rd-border: hsl(var(--rd-border));
+  --color-rd-accent: hsl(var(--rd-accent));
+  --color-rd-accent-fg: hsl(var(--rd-accent-fg));
+
   --font-serif: var(--font-playfair), Georgia, serif;
   --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-rd-serif: var(--font-literata), var(--font-playfair), Georgia, serif;
+  --font-rd-sans: var(--font-plus-jakarta), var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
@@ -81,4 +92,210 @@ h1, h2, .font-serif-heading {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground));
+}
+
+/* ==========================================================================
+   Mode Membaca Fokus (Zen Mode) & Kustomisasi Tipografi
+   Token dikendalikan lewat atribut data + CSS var pada elemen <html>
+   (lihat src/components/reading/reading-mode-provider.tsx)
+   ========================================================================== */
+
+:root,
+html[data-reading-theme="paper"] {
+  /* Paper Warm #FBF9F5 - nuansa buku kertas klasik */
+  --rd-bg: 40 43% 97%;
+  --rd-surface: 40 33% 94%;
+  --rd-fg: 30 12% 15%;
+  --rd-muted: 30 8% 45%;
+  --rd-border: 40 20% 86%;
+  --rd-accent: 160 45% 28%;
+  --rd-accent-fg: 0 0% 100%;
+
+  /* Nilai bawaan mode baca sebelum preferensi tersimpan diterapkan */
+  --rd-font-size: 18px;
+  --rd-line-height: 1.75;
+  --rd-body-font: var(--font-rd-serif);
+}
+
+html[data-reading-theme="light"] {
+  /* Pure Light #FFFFFF - putih bersih modern */
+  --rd-bg: 0 0% 100%;
+  --rd-surface: 0 0% 97%;
+  --rd-fg: 220 15% 12%;
+  --rd-muted: 220 8% 46%;
+  --rd-border: 220 13% 90%;
+  --rd-accent: 160 45% 28%;
+  --rd-accent-fg: 0 0% 100%;
+}
+
+html[data-reading-theme="dark"] {
+  /* Dark OLED #0F172A - kontras lembut untuk baca malam */
+  --rd-bg: 217 33% 11%;
+  --rd-surface: 217 26% 16%;
+  --rd-fg: 214 32% 89%;
+  --rd-muted: 215 20% 62%;
+  --rd-border: 217 22% 26%;
+  --rd-accent: 160 40% 48%;
+  --rd-accent-fg: 217 33% 11%;
+}
+
+/* Font body mengikuti preferensi pembaca */
+html[data-reading-font="serif"] {
+  --rd-body-font: var(--font-rd-serif);
+}
+html[data-reading-font="sans"] {
+  --rd-body-font: var(--font-rd-sans);
+}
+
+.rd-surface {
+  background-color: hsl(var(--rd-bg));
+  color: hsl(var(--rd-fg));
+  transition: background-color 240ms ease, color 240ms ease;
+}
+
+/* Konten esai: ukuran & jarak teks terukur dari slider pembaca */
+.rd-article {
+  font-family: var(--rd-body-font);
+  font-size: var(--rd-font-size, 18px);
+  line-height: var(--rd-line-height, 1.75);
+  color: hsl(var(--rd-fg));
+}
+
+/* Judul & ringkasan ikut skala preferensi pembaca */
+.rd-title {
+  font-family: var(--rd-body-font);
+  font-size: clamp(1.75rem, calc(var(--rd-font-size, 18px) * 2.15), 3rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.rd-excerpt {
+  font-family: var(--rd-body-font);
+  font-size: clamp(1rem, calc(var(--rd-font-size, 18px) * 1.15), 1.5rem);
+  line-height: calc(var(--rd-line-height, 1.75) * 0.95);
+}
+
+.rd-article p {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.rd-article h3 {
+  font-size: calc(var(--rd-font-size, 18px) * 1.45);
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.rd-article blockquote {
+  font-size: calc(var(--rd-font-size, 18px) * 0.95);
+  line-height: inherit;
+}
+
+.rd-article ul,
+.rd-article ol {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.rd-article a {
+  color: hsl(var(--rd-accent));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Slider ukuran / jarak baris */
+.rd-range {
+  accent-color: hsl(var(--rd-accent));
+}
+.rd-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 9999px;
+  background: hsl(var(--rd-accent));
+  border: 2px solid hsl(var(--rd-bg));
+  cursor: pointer;
+}
+.rd-range::-moz-range-thumb {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 9999px;
+  background: hsl(var(--rd-accent));
+  border: 2px solid hsl(var(--rd-bg));
+  cursor: pointer;
+}
+
+/* --- Zen Mode: chrome situs (navbar & footer) jadi overlay yang tersembunyi --- */
+[data-zen-chrome] {
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease,
+    visibility 260ms linear;
+}
+
+html[data-zen="true"] [data-zen-chrome] {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 45;
+  width: 100%;
+}
+
+html[data-zen="true"] [data-zen-chrome="bottom"] {
+  inset: auto 0 0 0;
+}
+
+html[data-zen="true"]:not([data-zen-reveal="true"]) [data-zen-chrome] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-100%);
+}
+
+html[data-zen="true"]:not([data-zen-reveal="true"]) [data-zen-chrome="bottom"] {
+  transform: translateY(100%);
+}
+
+/* Saat kursor/jari diarahkan ke tepi atas, chrome muncul kembali tanpa menggeser isi */
+html[data-zen="true"][data-zen-reveal="true"] [data-zen-chrome] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Bagian dalam halaman (breadcrumb, artikel terkait) disembunyikan saat Zen */
+html[data-zen="true"] [data-zen-hide] {
+  display: none;
+}
+
+/* Panel pengaturan tipografi */
+.rd-panel {
+  animation: rd-panel-in 180ms ease-out;
+}
+
+@keyframes rd-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Saat Zen aktif, kanvas halaman ikut warna latar baca */
+html[data-zen="true"] body {
+  background-color: hsl(var(--rd-bg));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-zen-chrome],
+  .rd-surface {
+    transition: none;
+  }
+  .rd-panel {
+    animation: none;
+  }
 }
