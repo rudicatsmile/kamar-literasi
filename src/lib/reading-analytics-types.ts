@@ -66,3 +66,4 @@ export interface ReadingAnalyticsSummary {
   articles: ArticleReadingPerformance[];
   timeRange: "7d" | "30d" | "all";
 }
+

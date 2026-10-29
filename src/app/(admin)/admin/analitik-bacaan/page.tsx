@@ -13,3 +13,4 @@ export default async function AdminAnalitikBacaanPage() {
 
   return <AnalitikBacaanClient initialData={initialData} />;
 }
+
