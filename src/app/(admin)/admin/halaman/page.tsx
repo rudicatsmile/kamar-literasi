@@ -9,12 +9,18 @@ import {
   OrganizationValue,
   TeamMember,
 } from "@/app/actions/team-and-values";
+import {
+  getContactInfoAction,
+  getFaqsAction,
+} from "@/app/actions/contact-settings";
+import { ContactInfoItem, FAQItem } from "@/lib/contact-types";
+
 import { AdminHalamanClient } from "./halaman-client";
 
 export const metadata: Metadata = {
   title: "Kelola Halaman Statis & Tim | Panel Admin",
   description:
-    "Sunting profil organisasi, visi, misi, nilai-nilai, dan tim redaksi Rumah Literasi.",
+    "Sunting profil organisasi, visi, misi, nilai-nilai, tim redaksi, info kontak, dan FAQ Rumah Literasi.",
 };
 
 export default async function AdminHalamanPage() {
@@ -40,41 +46,27 @@ export default async function AdminHalamanPage() {
   let pageData = dummyStaticPages.tentang;
   let valuesData: OrganizationValue[] = [];
   let teamData: TeamMember[] = [];
+  let contactData: ContactInfoItem[] = [];
+  let faqData: FAQItem[] = [];
 
   try {
-    const [fetchedPage, fetchedValues, fetchedTeam] = await Promise.all([
-      getStaticPage("tentang"),
-      getOrganizationValuesAction(),
-      getTeamMembersAction(),
-    ]);
+    const [fetchedPage, fetchedValues, fetchedTeam, fetchedContact, fetchedFaqs] =
+      await Promise.all([
+        getStaticPage("tentang"),
+        getOrganizationValuesAction(),
+        getTeamMembersAction(),
+        getContactInfoAction(),
+        getFaqsAction(),
+      ]);
 
     if (fetchedPage) {
       pageData = fetchedPage;
     }
 
-    valuesData =
-      fetchedValues && fetchedValues.length > 0
-        ? fetchedValues
-        : dummyStaticPages.tentang.values.map((v, i) => ({
-          id: `temp-val-${i}`,
-          title: v.title,
-          description: v.desc,
-          sort_order: i + 1,
-          is_active: true,
-        }));
-
-    teamData =
-      fetchedTeam && fetchedTeam.length > 0
-        ? fetchedTeam
-        : dummyStaticPages.tentang.team.map((t, i) => ({
-          id: `temp-team-${i}`,
-          name: t.name,
-          position: t.role,
-          photo_url: t.avatar,
-          bio: "",
-          sort_order: i + 1,
-          is_active: true,
-        }));
+    valuesData = fetchedValues || [];
+    teamData = fetchedTeam || [];
+    contactData = fetchedContact || [];
+    faqData = fetchedFaqs || [];
   } catch (err) {
     console.error("Gagal mengambil data halaman admin:", err);
     pageData = dummyStaticPages.tentang;
@@ -85,6 +77,8 @@ export default async function AdminHalamanPage() {
       initialData={pageData}
       initialValues={valuesData}
       initialTeam={teamData}
+      initialContact={contactData}
+      initialFaqs={faqData}
     />
   );
 }

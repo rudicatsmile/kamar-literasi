@@ -20,6 +20,13 @@ import {
   Eye,
   EyeOff,
   Image as ImageIcon,
+  Mail,
+  MessageSquare,
+  MapPin,
+  Clock,
+  Phone,
+  Globe,
+  HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,6 +63,20 @@ import {
   deleteTeamMemberAction,
   uploadTeamPhotoAction,
 } from "@/app/actions/team-and-values";
+import {
+  ContactInfoItem,
+  FAQItem,
+} from "@/lib/contact-types";
+import {
+  createContactInfoAction,
+  updateContactInfoAction,
+  deleteContactInfoAction,
+  toggleContactInfoActiveAction,
+  createFaqAction,
+  updateFaqAction,
+  deleteFaqAction,
+  toggleFaqActiveAction,
+} from "@/app/actions/contact-settings";
 import { toast } from "sonner";
 
 interface InitialPageData {
@@ -76,10 +97,14 @@ export function AdminHalamanClient({
   initialData,
   initialValues = [],
   initialTeam = [],
+  initialContact = [],
+  initialFaqs = [],
 }: {
   initialData: InitialPageData;
   initialValues?: OrganizationValue[];
   initialTeam?: TeamMember[];
+  initialContact?: ContactInfoItem[];
+  initialFaqs?: FAQItem[];
 }) {
   const router = useRouter();
 
@@ -144,6 +169,32 @@ export function AdminHalamanClient({
   );
   const [isSavingValuesHeader, setIsSavingValuesHeader] = React.useState(false);
 
+  // Tab 5: Contact Info State
+  const [contactList, setContactList] = React.useState<ContactInfoItem[]>(initialContact);
+  const [contactDialogOpen, setContactDialogOpen] = React.useState(false);
+  const [editingContact, setEditingContact] = React.useState<ContactInfoItem | null>(null);
+  const [contactForm, setContactForm] = React.useState({
+    key: "",
+    label: "",
+    value: "",
+    icon: "Mail",
+    sort_order: 1,
+    is_active: true,
+  });
+  const [isSavingContact, setIsSavingContact] = React.useState(false);
+
+  // Tab 6: FAQs State
+  const [faqList, setFaqList] = React.useState<FAQItem[]>(initialFaqs);
+  const [faqDialogOpen, setFaqDialogOpen] = React.useState(false);
+  const [editingFaq, setEditingFaq] = React.useState<FAQItem | null>(null);
+  const [faqForm, setFaqForm] = React.useState({
+    question: "",
+    answer: "",
+    sort_order: 1,
+    is_active: true,
+  });
+  const [isSavingFaq, setIsSavingFaq] = React.useState(false);
+
   React.useEffect(() => {
     setTentangTitle(initialData.title || "");
     setTentangSubtitle(initialData.subtitle || "");
@@ -173,6 +224,14 @@ export function AdminHalamanClient({
   React.useEffect(() => {
     setTeamList(initialTeam);
   }, [initialTeam]);
+
+  React.useEffect(() => {
+    setContactList(initialContact);
+  }, [initialContact]);
+
+  React.useEffect(() => {
+    setFaqList(initialFaqs);
+  }, [initialFaqs]);
 
   const handleSaveTeamHeader = async () => {
     setIsSavingTeamHeader(true);
@@ -492,6 +551,260 @@ export function AdminHalamanClient({
     }
   };
 
+  // Contact Handlers
+  const openCreateContact = () => {
+    setEditingContact(null);
+    setContactForm({
+      key: "",
+      label: "",
+      value: "",
+      icon: "Mail",
+      sort_order: contactList.length + 1,
+      is_active: true,
+    });
+    setContactDialogOpen(true);
+  };
+
+  const openEditContact = (c: ContactInfoItem) => {
+    setEditingContact(c);
+    setContactForm({
+      key: c.key,
+      label: c.label,
+      value: c.value,
+      icon: c.icon || "Mail",
+      sort_order: c.sort_order,
+      is_active: c.is_active,
+    });
+    setContactDialogOpen(true);
+  };
+
+  const handleSaveContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!contactForm.label.trim() || !contactForm.value.trim()) {
+      toast.error("Label dan nilai informasi kontak wajib diisi.");
+      return;
+    }
+    if (!editingContact && !contactForm.key.trim()) {
+      toast.error("Kunci unik (key) wajib diisi untuk kontak baru.");
+      return;
+    }
+
+    setIsSavingContact(true);
+    try {
+      if (editingContact) {
+        const res = await updateContactInfoAction(editingContact.id, {
+          label: contactForm.label.trim(),
+          value: contactForm.value.trim(),
+          icon: contactForm.icon,
+          sort_order: Number(contactForm.sort_order),
+          is_active: contactForm.is_active,
+        });
+
+        if (!res.success) {
+          toast.error(res.error || "Gagal memperbarui informasi kontak.");
+          return;
+        }
+
+        setContactList(
+          contactList.map((item) =>
+            item.id === editingContact.id
+              ? {
+                  ...item,
+                  label: contactForm.label.trim(),
+                  value: contactForm.value.trim(),
+                  icon: contactForm.icon,
+                  sort_order: Number(contactForm.sort_order),
+                  is_active: contactForm.is_active,
+                }
+              : item
+          )
+        );
+        toast.success(`Informasi kontak "${contactForm.label}" berhasil diperbarui.`);
+      } else {
+        const res = await createContactInfoAction({
+          key: contactForm.key.trim().toLowerCase(),
+          label: contactForm.label.trim(),
+          value: contactForm.value.trim(),
+          icon: contactForm.icon,
+          sort_order: Number(contactForm.sort_order),
+          is_active: contactForm.is_active,
+        });
+
+        if (!res.success) {
+          toast.error(res.error || "Gagal menambahkan informasi kontak.");
+          return;
+        }
+
+        toast.success(`Informasi kontak "${contactForm.label}" berhasil ditambahkan.`);
+      }
+
+      setContactDialogOpen(false);
+      router.refresh();
+    } catch {
+      toast.error("Terjadi kendala saat menyimpan informasi kontak.");
+    } finally {
+      setIsSavingContact(false);
+    }
+  };
+
+  const handleToggleContactActive = async (c: ContactInfoItem) => {
+    try {
+      const res = await toggleContactInfoActiveAction(c.id, c.is_active);
+      if (!res.success) {
+        toast.error(res.error || "Gagal memperbarui status kontak.");
+        return;
+      }
+      setContactList(
+        contactList.map((item) =>
+          item.id === c.id ? { ...item, is_active: !item.is_active } : item
+        )
+      );
+      toast.success(
+        `Kontak "${c.label}" sekarang ${!c.is_active ? "aktif" : "nonaktif"}.`
+      );
+    } catch {
+      toast.error("Terjadi kendala saat memperbarui status.");
+    }
+  };
+
+  const handleDeleteContact = async (c: ContactInfoItem) => {
+    if (confirm(`Apakah Anda yakin ingin menghapus informasi kontak "${c.label}"?`)) {
+      try {
+        const res = await deleteContactInfoAction(c.id);
+        if (!res.success) {
+          toast.error(res.error || "Gagal menghapus informasi kontak.");
+          return;
+        }
+        setContactList(contactList.filter((item) => item.id !== c.id));
+        toast.success(`Informasi kontak "${c.label}" berhasil dihapus.`);
+        router.refresh();
+      } catch {
+        toast.error("Terjadi kendala saat menghapus informasi kontak.");
+      }
+    }
+  };
+
+  // FAQ Handlers
+  const openCreateFaq = () => {
+    setEditingFaq(null);
+    setFaqForm({
+      question: "",
+      answer: "",
+      sort_order: faqList.length + 1,
+      is_active: true,
+    });
+    setFaqDialogOpen(true);
+  };
+
+  const openEditFaq = (faq: FAQItem) => {
+    setEditingFaq(faq);
+    setFaqForm({
+      question: faq.question,
+      answer: faq.answer,
+      sort_order: faq.sort_order,
+      is_active: faq.is_active,
+    });
+    setFaqDialogOpen(true);
+  };
+
+  const handleSaveFaq = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!faqForm.question.trim() || !faqForm.answer.trim()) {
+      toast.error("Pertanyaan dan jawaban wajib diisi.");
+      return;
+    }
+
+    setIsSavingFaq(true);
+    try {
+      if (editingFaq) {
+        const res = await updateFaqAction(editingFaq.id, {
+          question: faqForm.question.trim(),
+          answer: faqForm.answer.trim(),
+          sort_order: Number(faqForm.sort_order),
+          is_active: faqForm.is_active,
+        });
+
+        if (!res.success) {
+          toast.error(res.error || "Gagal memperbarui FAQ.");
+          return;
+        }
+
+        setFaqList(
+          faqList.map((item) =>
+            item.id === editingFaq.id
+              ? {
+                  ...item,
+                  question: faqForm.question.trim(),
+                  answer: faqForm.answer.trim(),
+                  sort_order: Number(faqForm.sort_order),
+                  is_active: faqForm.is_active,
+                }
+              : item
+          )
+        );
+        toast.success("Pertanyaan umum berhasil diperbarui.");
+      } else {
+        const res = await createFaqAction({
+          question: faqForm.question.trim(),
+          answer: faqForm.answer.trim(),
+          sort_order: Number(faqForm.sort_order),
+          is_active: faqForm.is_active,
+        });
+
+        if (!res.success) {
+          toast.error(res.error || "Gagal menambahkan FAQ.");
+          return;
+        }
+
+        toast.success("Pertanyaan umum berhasil ditambahkan.");
+      }
+
+      setFaqDialogOpen(false);
+      router.refresh();
+    } catch {
+      toast.error("Terjadi kendala saat menyimpan FAQ.");
+    } finally {
+      setIsSavingFaq(false);
+    }
+  };
+
+  const handleToggleFaqActive = async (faq: FAQItem) => {
+    try {
+      const res = await toggleFaqActiveAction(faq.id, faq.is_active);
+      if (!res.success) {
+        toast.error(res.error || "Gagal memperbarui status FAQ.");
+        return;
+      }
+      setFaqList(
+        faqList.map((item) =>
+          item.id === faq.id ? { ...item, is_active: !item.is_active } : item
+        )
+      );
+      toast.success(
+        `FAQ sekarang ${!faq.is_active ? "aktif" : "nonaktif"}.`
+      );
+    } catch {
+      toast.error("Terjadi kendala saat memperbarui status FAQ.");
+    }
+  };
+
+  const handleDeleteFaq = async (faq: FAQItem) => {
+    if (confirm(`Apakah Anda yakin ingin menghapus pertanyaan ini?`)) {
+      try {
+        const res = await deleteFaqAction(faq.id);
+        if (!res.success) {
+          toast.error(res.error || "Gagal menghapus FAQ.");
+          return;
+        }
+        setFaqList(faqList.filter((item) => item.id !== faq.id));
+        toast.success("Pertanyaan umum berhasil dihapus.");
+        router.refresh();
+      } catch {
+        toast.error("Terjadi kendala saat menghapus FAQ.");
+      }
+    }
+  };
+
   return (
     <div className="space-y-8 max-w-5xl">
       {/* Header */}
@@ -500,30 +813,38 @@ export function AdminHalamanClient({
           Manajemen Konten Publik
         </span>
         <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground mt-1">
-          Kelola Halaman Statis & Tim
+          Kelola Halaman Statis, Tim & Kontak
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Sunting naskah profil organisasi, visi, misi, nilai-nilai, dan pengurus tim redaksi Rumah Literasi di PostgreSQL Supabase.
+          Sunting naskah profil organisasi, visi, misi, nilai-nilai, pengurus tim redaksi, info kontak resmi, dan FAQ Rumah Literasi di PostgreSQL Supabase.
         </p>
       </div>
 
       <Tabs defaultValue="visi" className="space-y-6">
-        <TabsList className="grid grid-cols-2 sm:grid-cols-4 w-full">
-          <TabsTrigger value="visi" className="gap-2 text-xs">
-            <Compass className="h-4 w-4" />
+        <TabsList className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 w-full">
+          <TabsTrigger value="visi" className="gap-1.5 text-xs">
+            <Compass className="h-3.5 w-3.5" />
             <span>Visi & Misi</span>
           </TabsTrigger>
-          <TabsTrigger value="tentang" className="gap-2 text-xs">
-            <FileText className="h-4 w-4" />
-            <span>Cerita & Profil</span>
+          <TabsTrigger value="tentang" className="gap-1.5 text-xs">
+            <FileText className="h-3.5 w-3.5" />
+            <span>Profil</span>
           </TabsTrigger>
-          <TabsTrigger value="nilai" className="gap-2 text-xs">
-            <ShieldCheck className="h-4 w-4" />
-            <span>Nilai-Nilai ({valuesList.length})</span>
+          <TabsTrigger value="nilai" className="gap-1.5 text-xs">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            <span>Nilai ({valuesList.length})</span>
           </TabsTrigger>
-          <TabsTrigger value="team" className="gap-2 text-xs">
-            <Users className="h-4 w-4" />
-            <span>Tim Redaksi ({teamList.length})</span>
+          <TabsTrigger value="team" className="gap-1.5 text-xs">
+            <Users className="h-3.5 w-3.5" />
+            <span>Tim ({teamList.length})</span>
+          </TabsTrigger>
+          <TabsTrigger value="kontak" className="gap-1.5 text-xs">
+            <Mail className="h-3.5 w-3.5" />
+            <span>Kontak ({contactList.length})</span>
+          </TabsTrigger>
+          <TabsTrigger value="faq" className="gap-1.5 text-xs">
+            <HelpCircle className="h-3.5 w-3.5" />
+            <span>FAQ ({faqList.length})</span>
           </TabsTrigger>
         </TabsList>
 
@@ -1009,6 +1330,191 @@ export function AdminHalamanClient({
             ))}
           </div>
         </TabsContent>
+
+        {/* ================================================================== */}
+        {/* TAB 5: INFORMASI KONTAK RESMI */}
+        {/* ================================================================== */}
+        <TabsContent value="kontak" className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-md border border-border shadow-xs">
+            <div>
+              <h3 className="font-serif text-base font-bold text-foreground flex items-center gap-2">
+                <Mail className="h-4 w-4 text-primary" />
+                <span>Informasi Kontak Resmi</span>
+                <Badge variant="outline" className="text-xs font-sans">
+                  {contactList.length} Butir
+                </Badge>
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Data surel, nomor WhatsApp gateway, alamat sekretariat, dan jam respon yang tampil di rute publik <code>/kontak</code> (tabel: <code>contact_info</code>).
+              </p>
+            </div>
+            <Button onClick={openCreateContact} size="sm" className="gap-2 shrink-0">
+              <Plus className="h-4 w-4" />
+              <span>Tambah Info Kontak</span>
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {contactList.map((c) => (
+              <Card key={c.id || c.key} className="border-border shadow-xs flex flex-col justify-between">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <Badge variant="outline" className="text-[10px] font-mono">
+                      Urutan #{c.sort_order} • key: {c.key}
+                    </Badge>
+                    <Badge
+                      variant={c.is_active ? "success" : "secondary"}
+                      className="text-[10px]"
+                    >
+                      {c.is_active ? "Aktif" : "Nonaktif"}
+                    </Badge>
+                  </div>
+                  <CardTitle className="font-serif text-base font-bold text-foreground flex items-center gap-2">
+                    <span className="text-xs px-2 py-0.5 rounded bg-primary/10 text-primary font-mono">
+                      {c.icon || "Mail"}
+                    </span>
+                    <span>{c.label}</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-xs text-muted-foreground whitespace-pre-line bg-muted/30 p-2.5 rounded border border-border/40 font-mono">
+                    {c.value}
+                  </p>
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-border">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleToggleContactActive(c)}
+                      className="h-7 text-xs text-muted-foreground gap-1.5"
+                    >
+                      {c.is_active ? (
+                        <>
+                          <EyeOff className="h-3.5 w-3.5" />
+                          <span>Nonaktifkan</span>
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="h-3.5 w-3.5" />
+                          <span>Aktifkan</span>
+                        </>
+                      )}
+                    </Button>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openEditContact(c)}
+                        className="h-7 px-2 text-xs gap-1"
+                      >
+                        <Edit3 className="h-3.5 w-3.5" />
+                        <span>Edit</span>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteContact(c)}
+                        className="h-7 px-2 text-xs text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        {/* ================================================================== */}
+        {/* TAB 6: PERTANYAAN UMUM / FAQ */}
+        {/* ================================================================== */}
+        <TabsContent value="faq" className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-md border border-border shadow-xs">
+            <div>
+              <h3 className="font-serif text-base font-bold text-foreground flex items-center gap-2">
+                <HelpCircle className="h-4 w-4 text-primary" />
+                <span>Daftar Pertanyaan Umum (FAQ)</span>
+                <Badge variant="outline" className="text-xs font-sans">
+                  {faqList.length} Pertanyaan
+                </Badge>
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Tanya-jawab seputar program, materi gratis, dan kiriman naskah di rute publik <code>/kontak</code> (tabel: <code>faqs</code>).
+              </p>
+            </div>
+            <Button onClick={openCreateFaq} size="sm" className="gap-2 shrink-0">
+              <Plus className="h-4 w-4" />
+              <span>Tambah FAQ</span>
+            </Button>
+          </div>
+
+          <div className="space-y-3">
+            {faqList.map((faq, idx) => (
+              <Card key={faq.id || idx} className="border-border shadow-xs">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <Badge variant="outline" className="text-[10px] font-mono">
+                      Urutan #{faq.sort_order}
+                    </Badge>
+                    <Badge
+                      variant={faq.is_active ? "success" : "secondary"}
+                      className="text-[10px]"
+                    >
+                      {faq.is_active ? "Aktif" : "Nonaktif"}
+                    </Badge>
+                  </div>
+                  <CardTitle className="font-serif text-base font-bold text-foreground">
+                    {faq.question}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-line bg-muted/20 p-3 rounded border border-border/40">
+                    {faq.answer}
+                  </p>
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-border">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleToggleFaqActive(faq)}
+                      className="h-7 text-xs text-muted-foreground gap-1.5"
+                    >
+                      {faq.is_active ? (
+                        <>
+                          <EyeOff className="h-3.5 w-3.5" />
+                          <span>Nonaktifkan</span>
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="h-3.5 w-3.5" />
+                          <span>Aktifkan</span>
+                        </>
+                      )}
+                    </Button>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openEditFaq(faq)}
+                        className="h-7 px-2 text-xs gap-1"
+                      >
+                        <Edit3 className="h-3.5 w-3.5" />
+                        <span>Edit</span>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteFaq(faq)}
+                        className="h-7 px-2 text-xs text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
       </Tabs>
 
       {/* ================================================================== */}
@@ -1287,6 +1793,282 @@ export function AdminHalamanClient({
                   </>
                 ) : (
                   <span>Simpan Anggota Tim</span>
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* ================================================================== */}
+      {/* MODAL: CREATE / EDIT INFORMASI KONTAK */}
+      {/* ================================================================== */}
+      <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="h-5 w-5 text-primary" />
+              <span>
+                {editingContact
+                  ? "Edit Informasi Kontak"
+                  : "Tambah Informasi Kontak"}
+              </span>
+            </DialogTitle>
+            <DialogDescription>
+              Detail kontak resmi yang tampil di panel samping halaman <code>/kontak</code>.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSaveContact} className="space-y-4">
+            {!editingContact && (
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  Kunci Unik (Key) <span className="text-destructive">*</span>
+                </label>
+                <Input
+                  value={contactForm.key}
+                  onChange={(e) =>
+                    setContactForm({
+                      ...contactForm,
+                      key: e.target.value.replace(/\s+/g, "_"),
+                    })
+                  }
+                  placeholder="Contoh: email_support, hotlinewa, jam_kerja"
+                  required
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Pengenal unik dalam database (huruf kecil dan garis bawah).
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-foreground">
+                Label Kontak <span className="text-destructive">*</span>
+              </label>
+              <Input
+                value={contactForm.label}
+                onChange={(e) =>
+                  setContactForm({ ...contactForm, label: e.target.value })
+                }
+                placeholder="Contoh: Surel Resmi, WhatsApp Gateway"
+                required
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-foreground">
+                Nilai / Isi Kontak <span className="text-destructive">*</span>
+              </label>
+              <Textarea
+                rows={3}
+                value={contactForm.value}
+                onChange={(e) =>
+                  setContactForm({ ...contactForm, value: e.target.value })
+                }
+                placeholder="Contoh: nama@domain.com atau Jl. Contoh No. 12"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  Ikon Tampilan
+                </label>
+                <select
+                  value={contactForm.icon}
+                  onChange={(e) =>
+                    setContactForm({ ...contactForm, icon: e.target.value })
+                  }
+                  className="w-full text-xs rounded-md border border-input bg-background px-3 py-2 text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
+                >
+                  <option value="Mail">Mail (Email)</option>
+                  <option value="MessageSquare">MessageSquare (WhatsApp)</option>
+                  <option value="MapPin">MapPin (Alamat)</option>
+                  <option value="Clock">Clock (Jam Kerja)</option>
+                  <option value="Phone">Phone (Telepon)</option>
+                  <option value="Globe">Globe (Website)</option>
+                  <option value="Building">Building (Kantor)</option>
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  Urutan Tampil
+                </label>
+                <Input
+                  type="number"
+                  min="1"
+                  value={contactForm.sort_order}
+                  onChange={(e) =>
+                    setContactForm({
+                      ...contactForm,
+                      sort_order: parseInt(e.target.value) || 1,
+                    })
+                  }
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <label className="flex items-center gap-2 text-xs cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={contactForm.is_active}
+                  onChange={(e) =>
+                    setContactForm({
+                      ...contactForm,
+                      is_active: e.target.checked,
+                    })
+                  }
+                  className="rounded border-input text-primary focus:ring-primary"
+                />
+                <span>Tampilkan di halaman publik</span>
+              </label>
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setContactDialogOpen(false)}
+                disabled={isSavingContact}
+              >
+                Batal
+              </Button>
+              <Button
+                type="submit"
+                disabled={isSavingContact}
+                className="gap-2"
+              >
+                {isSavingContact ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Menyimpan...</span>
+                  </>
+                ) : (
+                  <span>Simpan Kontak</span>
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* ================================================================== */}
+      {/* MODAL: CREATE / EDIT PERTANYAAN UMUM (FAQ) */}
+      {/* ================================================================== */}
+      <Dialog open={faqDialogOpen} onOpenChange={setFaqDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <HelpCircle className="h-5 w-5 text-primary" />
+              <span>
+                {editingFaq
+                  ? "Edit Pertanyaan Umum (FAQ)"
+                  : "Tambah Pertanyaan Umum (FAQ)"}
+              </span>
+            </DialogTitle>
+            <DialogDescription>
+              Tanya-jawab resmi yang membantu pengunjung memahami layanan Rumah Literasi.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSaveFaq} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-foreground">
+                Pertanyaan <span className="text-destructive">*</span>
+              </label>
+              <Input
+                value={faqForm.question}
+                onChange={(e) =>
+                  setFaqForm({ ...faqForm, question: e.target.value })
+                }
+                placeholder="Contoh: Apakah seluruh materi di website ini gratis?"
+                required
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-foreground">
+                Jawaban <span className="text-destructive">*</span>
+              </label>
+              <Textarea
+                rows={4}
+                value={faqForm.answer}
+                onChange={(e) =>
+                  setFaqForm({ ...faqForm, answer: e.target.value })
+                }
+                placeholder="Tuliskan jawaban yang ramah, jelas, dan lugas..."
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  Nomor Urutan
+                </label>
+                <Input
+                  type="number"
+                  min="1"
+                  value={faqForm.sort_order}
+                  onChange={(e) =>
+                    setFaqForm({
+                      ...faqForm,
+                      sort_order: parseInt(e.target.value) || 1,
+                    })
+                  }
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  Status
+                </label>
+                <div className="pt-2">
+                  <label className="flex items-center gap-2 text-xs cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={faqForm.is_active}
+                      onChange={(e) =>
+                        setFaqForm({
+                          ...faqForm,
+                          is_active: e.target.checked,
+                        })
+                      }
+                      className="rounded border-input text-primary focus:ring-primary"
+                    />
+                    <span>Aktif (Tampil)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setFaqDialogOpen(false)}
+                disabled={isSavingFaq}
+              >
+                Batal
+              </Button>
+              <Button
+                type="submit"
+                disabled={isSavingFaq}
+                className="gap-2"
+              >
+                {isSavingFaq ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Menyimpan...</span>
+                  </>
+                ) : (
+                  <span>Simpan FAQ</span>
                 )}
               </Button>
             </DialogFooter>

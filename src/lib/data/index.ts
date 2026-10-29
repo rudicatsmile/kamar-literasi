@@ -19,6 +19,13 @@ import {
   Challenge,
   UserChallengeProgress,
 } from "@/lib/dummy-data";
+import {
+  ContactInfoItem,
+  FAQItem,
+  DEFAULT_CONTACT_INFO,
+  DEFAULT_FAQS,
+} from "@/lib/contact-types";
+
 
 function isSupabaseLive(): boolean {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -442,6 +449,52 @@ export async function getTeamMembers(): Promise<
   }
 
   return dummyStaticPages.tentang.team;
+}
+
+export async function getContactInfo(): Promise<ContactInfoItem[]> {
+  if (!isSupabaseLive()) {
+    return DEFAULT_CONTACT_INFO;
+  }
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("contact_info")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+
+    if (!error && data && data.length > 0) {
+      return data;
+    }
+  } catch (err) {
+    console.error("Gagal mengambil contact_info:", err);
+  }
+
+  return DEFAULT_CONTACT_INFO;
+}
+
+export async function getFaqs(): Promise<FAQItem[]> {
+  if (!isSupabaseLive()) {
+    return DEFAULT_FAQS;
+  }
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("faqs")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+
+    if (!error && data && data.length > 0) {
+      return data;
+    }
+  } catch (err) {
+    console.error("Gagal mengambil faqs:", err);
+  }
+
+  return DEFAULT_FAQS;
 }
 
 // ==============================================================================
