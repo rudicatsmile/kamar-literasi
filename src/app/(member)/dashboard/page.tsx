@@ -1,5 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   Flame,
   Trophy,
@@ -32,6 +33,11 @@ export default async function MemberDashboardPage() {
       getUserFavoriteResourcesList(),
       getArticles(),
     ]);
+
+  // If user has role 'admin', automatically redirect to the admin panel
+  if (userProfile.role === "admin") {
+    redirect("/admin");
+  }
 
   const recommendedArticle = articles[0] || null;
   const progressPercent = activeChallenge

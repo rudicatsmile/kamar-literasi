@@ -2,18 +2,22 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowRight, Lock, Mail, Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowRight, Lock, Mail, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
+import { loginAction } from "@/app/actions/auth";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
-  const [email, setEmail] = React.useState("siti.rahmawati@contoh.id");
-  const [password, setPassword] = React.useState("Literasi2026!");
+  const searchParams = useSearchParams();
+  const nextParam = searchParams.get("next");
+
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [rememberMe, setRememberMe] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -30,7 +34,6 @@ export default function LoginPage() {
     formData.append("email", email);
     formData.append("password", password);
 
-    const { loginAction } = await import("@/app/actions/auth");
     const result = await loginAction(formData);
 
     setIsLoading(false);
@@ -38,13 +41,20 @@ export default function LoginPage() {
       toast.error(result.error);
     } else {
       toast.success("Berhasil masuk! Selamat datang kembali.");
-      router.push("/dashboard");
-    }
-  };
 
-  const handleDemoAdmin = () => {
-    toast.success("Masuk sebagai Admin Redaksi...");
-    router.push("/admin");
+      // Role-based redirection:
+      // If user has 'admin' role, redirect to /admin (or next if next is an admin route)
+      // If user has 'member' role, redirect to /dashboard (or next if next is a member route)
+      if (result.role === "admin") {
+        const destination = nextParam && nextParam.startsWith("/admin") ? nextParam : "/admin";
+        router.push(destination);
+      } else {
+        const destination = nextParam && !nextParam.startsWith("/admin") ? nextParam : "/dashboard";
+        router.push(destination);
+      }
+
+      router.refresh();
+    }
   };
 
   return (
@@ -54,7 +64,7 @@ export default function LoginPage() {
           Masuk ke Akun Anda
         </CardTitle>
         <CardDescription className="text-xs text-muted-foreground">
-          Lanjutkan progres tantangan membaca dan kelola materi favorit Anda.
+          Akses dasbor anggota atau panel administrasi redaksi.
         </CardDescription>
       </CardHeader>
 
@@ -136,22 +146,15 @@ export default function LoginPage() {
             Daftar Anggota Baru
           </Link>
         </div>
-
-        {/* Quick Demo Access Bar */}
-        <div className="pt-3 border-t border-dashed border-border flex items-center justify-between gap-2">
-          <span className="text-[11px] text-muted-foreground">Akses Cepat Pengujian:</span>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleDemoAdmin}
-            className="text-[11px] h-7 gap-1"
-          >
-            <ShieldCheck className="h-3 w-3 text-amber-600" />
-            <span>Masuk Panel Admin</span>
-          </Button>
-        </div>
       </CardContent>
     </Card>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <React.Suspense fallback={<Card className="border-border shadow-md min-h-[300px]" />}>
+      <LoginForm />
+    </React.Suspense>
   );
 }

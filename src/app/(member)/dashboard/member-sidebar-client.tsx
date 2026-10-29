@@ -15,6 +15,7 @@ import {
   BookOpen,
   Flame,
   ExternalLink,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -122,6 +123,18 @@ export function MemberSidebarClient({
               </Link>
             );
           })}
+
+          {userProfile.role === "admin" && (
+            <div className="pt-3 pb-1">
+              <Link
+                href="/admin"
+                className="flex items-center gap-2.5 rounded-md bg-amber-50 border border-amber-200 px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100 transition-colors shadow-xs"
+              >
+                <ShieldCheck className="h-4 w-4 text-amber-700" />
+                <span>Buka Panel Admin</span>
+              </Link>
+            </div>
+          )}
 
           <div className="pt-6">
             <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">

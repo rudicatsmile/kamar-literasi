@@ -52,7 +52,7 @@ export async function loginAction(formData: FormData) {
 
   if (isSupabaseConfigured) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: authData, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -63,10 +63,30 @@ export async function loginAction(formData: FormData) {
         error: error.message || "Gagal masuk. Periksa email dan kata sandi Anda.",
       };
     }
+
+    let userRole = "member";
+    if (authData?.user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", authData.user.id)
+        .single();
+
+      if (profile?.role) {
+        userRole = profile.role;
+      }
+    }
+
+    revalidatePath("/", "layout");
+    return {
+      success: true,
+      role: userRole,
+      redirectTo: userRole === "admin" ? "/admin" : "/dashboard",
+    };
   }
 
   revalidatePath("/", "layout");
-  return { success: true };
+  return { success: true, role: "member", redirectTo: "/dashboard" };
 }
 
 export async function registerAction(formData: FormData) {
