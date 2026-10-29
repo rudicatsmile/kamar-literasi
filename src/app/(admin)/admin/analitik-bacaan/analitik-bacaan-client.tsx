@@ -129,6 +129,10 @@ export function AnalitikBacaanClient({
             <Badge variant="outline" className="text-[10px] py-0 px-2 bg-primary/5 text-primary border-primary/20">
               Fitur 3.4 • Reading Drop-off
             </Badge>
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              100% Data Riil Supabase ({data.totalSessions} Sesi)
+            </span>
           </div>
           <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground mt-1">
             Analitik Perilaku Membaca Mendalam
