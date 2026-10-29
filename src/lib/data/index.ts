@@ -324,10 +324,30 @@ export async function getStaticPage(slug: string) {
     }
 
     if (slug === "tentang") {
+      let parsedContent: any = {};
+      try {
+        parsedContent = typeof data.content === "string" ? JSON.parse(data.content) : data.content;
+        // Safeguard against legacy double stringified story
+        if (typeof parsedContent?.story === "string" && parsedContent.story.trim().startsWith("{")) {
+          try {
+            const inner = JSON.parse(parsedContent.story);
+            if (inner.story) parsedContent.story = inner.story;
+          } catch {
+            // retain parsedContent.story as string
+          }
+        }
+      } catch {
+        parsedContent = {};
+      }
+
       return {
-        ...dummyStaticPages.tentang,
         title: data.title || dummyStaticPages.tentang.title,
-        story: data.content || dummyStaticPages.tentang.story,
+        subtitle: parsedContent.subtitle ?? dummyStaticPages.tentang.subtitle,
+        story: parsedContent.story ?? (typeof data.content === "string" && !data.content.startsWith("{") ? data.content : dummyStaticPages.tentang.story),
+        visi: parsedContent.visi ?? dummyStaticPages.tentang.visi,
+        misi: Array.isArray(parsedContent.misi) && parsedContent.misi.length > 0 ? parsedContent.misi : dummyStaticPages.tentang.misi,
+        values: Array.isArray(parsedContent.values) && parsedContent.values.length > 0 ? parsedContent.values : dummyStaticPages.tentang.values,
+        team: Array.isArray(parsedContent.team) && parsedContent.team.length > 0 ? parsedContent.team : dummyStaticPages.tentang.team,
       };
     }
 

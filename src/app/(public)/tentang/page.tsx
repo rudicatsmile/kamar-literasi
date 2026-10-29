@@ -50,7 +50,7 @@ export default async function TentangPage() {
             Latar Belakang & Cerita Kami
           </h2>
           <div className="max-w-[68ch] space-y-4 text-base leading-relaxed text-foreground">
-            {tentang.story.split("\n\n").map((para: string, idx: number) => {
+            {(tentang.story || "").split("\n\n").map((para: string, idx: number) => {
               const trimmed = para.trim();
               if (!trimmed) return null;
               return <p key={idx}>{trimmed}</p>;
