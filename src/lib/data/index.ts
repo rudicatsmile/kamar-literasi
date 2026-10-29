@@ -345,6 +345,10 @@ export async function getStaticPage(slug: string) {
         subtitle: parsedContent.subtitle ?? dummyStaticPages.tentang.subtitle,
         story: parsedContent.story ?? (typeof data.content === "string" && !data.content.startsWith("{") ? data.content : dummyStaticPages.tentang.story),
         visi: parsedContent.visi ?? dummyStaticPages.tentang.visi,
+        misi:
+          Array.isArray(parsedContent.misi) && parsedContent.misi.length > 0
+            ? parsedContent.misi
+            : dummyStaticPages.tentang.misi,
         team_title:
           parsedContent.team_title ||
           "Pengurus Tim Penggerak & Redaksi",
