@@ -13,6 +13,7 @@ import {
   Lightbulb,
   FileEdit,
   Users,
+  UserCog,
   Send,
   Mail,
   ShieldCheck,
@@ -27,6 +28,7 @@ import { cn } from "@/lib/utils";
 
 const ADMIN_MODULES = [
   { href: "/admin", label: "Ringkasan Dasbor", icon: LayoutDashboard },
+  { href: "/admin/pengguna", label: "Kelola Pengguna", icon: UserCog },
   { href: "/admin/artikel", label: "Kelola Artikel", icon: FileText },
   { href: "/admin/kategori", label: "Kategori Artikel", icon: FolderTree },
   { href: "/admin/resource", label: "Resource Hub", icon: FolderArchive },

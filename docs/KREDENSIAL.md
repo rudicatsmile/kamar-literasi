@@ -16,6 +16,7 @@ Digunakan untuk masuk ke sistem melalui halaman: [`http://localhost:3000/login`]
 - **User ID (Supabase)**: `8f536a9d-4fea-4cb8-81e1-bb8b1352afdb`
 - **Akses Rute**: [`/admin`](http://localhost:3000/admin) dan seluruh sub-modul:
   - Ringkasan Metrik: `/admin`
+  - Manajemen Pengguna & Hak Akses: `/admin/pengguna` (tambah/edit profil/reset kata sandi/hapus)
   - Manajemen Artikel & Publikasi: `/admin/artikel` (tambah/edit/hapus)
   - Kategori Artikel: `/admin/kategori`
   - Resource Hub & Modul PDF/Buku: `/admin/resource`

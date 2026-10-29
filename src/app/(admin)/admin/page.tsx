@@ -6,6 +6,7 @@ import {
   Trophy,
   Send,
   MessageSquare,
+  UserCog,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,12 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          <Link href="/admin/pengguna">
+            <Button variant="outline" size="sm" className="gap-1.5">
+              <UserCog className="h-4 w-4" />
+              <span>Kelola Pengguna</span>
+            </Button>
+          </Link>
           <Link href="/admin/artikel/baru">
             <Button size="sm" className="gap-1.5">
               <FileText className="h-4 w-4" />
