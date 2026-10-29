@@ -27,6 +27,8 @@ import {
   Phone,
   Globe,
   HelpCircle,
+  PanelBottom,
+  BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -77,6 +79,11 @@ import {
   deleteFaqAction,
   toggleFaqActiveAction,
 } from "@/app/actions/contact-settings";
+import { updateFooterSettingsAction } from "@/app/actions/site-settings";
+import {
+  FooterSettings,
+  DEFAULT_FOOTER_SETTINGS,
+} from "@/lib/site-settings-types";
 import { toast } from "sonner";
 
 interface InitialPageData {
@@ -99,12 +106,14 @@ export function AdminHalamanClient({
   initialTeam = [],
   initialContact = [],
   initialFaqs = [],
+  initialFooter = DEFAULT_FOOTER_SETTINGS,
 }: {
   initialData: InitialPageData;
   initialValues?: OrganizationValue[];
   initialTeam?: TeamMember[];
   initialContact?: ContactInfoItem[];
   initialFaqs?: FAQItem[];
+  initialFooter?: FooterSettings;
 }) {
   const router = useRouter();
 
@@ -195,6 +204,12 @@ export function AdminHalamanClient({
   });
   const [isSavingFaq, setIsSavingFaq] = React.useState(false);
 
+  // Tab 7: Footer Settings State
+  const [footerForm, setFooterForm] = React.useState<FooterSettings>(
+    initialFooter || DEFAULT_FOOTER_SETTINGS
+  );
+  const [isSavingFooter, setIsSavingFooter] = React.useState(false);
+
   React.useEffect(() => {
     setTentangTitle(initialData.title || "");
     setTentangSubtitle(initialData.subtitle || "");
@@ -232,6 +247,40 @@ export function AdminHalamanClient({
   React.useEffect(() => {
     setFaqList(initialFaqs);
   }, [initialFaqs]);
+
+  React.useEffect(() => {
+    setFooterForm(initialFooter || DEFAULT_FOOTER_SETTINGS);
+  }, [initialFooter]);
+
+  // Handle Save Footer
+  const handleSaveFooter = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!footerForm.title.trim() || !footerForm.description.trim() || !footerForm.tagline.trim()) {
+      toast.error("Semua field konten footer wajib diisi.");
+      return;
+    }
+
+    setIsSavingFooter(true);
+    try {
+      const res = await updateFooterSettingsAction({
+        title: footerForm.title.trim(),
+        description: footerForm.description.trim(),
+        tagline: footerForm.tagline.trim(),
+      });
+
+      if (!res.success) {
+        toast.error(res.error || "Gagal memperbarui pengaturan footer.");
+        return;
+      }
+
+      toast.success("Konten footer 'Rumah Literasi' berhasil diperbarui ke database!");
+      router.refresh();
+    } catch {
+      toast.error("Terjadi kendala saat menyimpan pengaturan footer.");
+    } finally {
+      setIsSavingFooter(false);
+    }
+  };
 
   const handleSaveTeamHeader = async () => {
     setIsSavingTeamHeader(true);
@@ -821,7 +870,7 @@ export function AdminHalamanClient({
       </div>
 
       <Tabs defaultValue="visi" className="space-y-6">
-        <TabsList className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 w-full">
+        <TabsList className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 w-full">
           <TabsTrigger value="visi" className="gap-1.5 text-xs">
             <Compass className="h-3.5 w-3.5" />
             <span>Visi & Misi</span>
@@ -845,6 +894,10 @@ export function AdminHalamanClient({
           <TabsTrigger value="faq" className="gap-1.5 text-xs">
             <HelpCircle className="h-3.5 w-3.5" />
             <span>FAQ ({faqList.length})</span>
+          </TabsTrigger>
+          <TabsTrigger value="footer" className="gap-1.5 text-xs">
+            <PanelBottom className="h-3.5 w-3.5" />
+            <span>Footer</span>
           </TabsTrigger>
         </TabsList>
 
@@ -1514,6 +1567,154 @@ export function AdminHalamanClient({
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        {/* ================================================================== */}
+        {/* TAB 7: FOOTER SITUS */}
+        {/* ================================================================== */}
+        <TabsContent value="footer">
+          <Card className="border-border shadow-xs">
+            <CardHeader className="border-b border-border pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <CardTitle className="font-serif text-lg font-bold flex items-center gap-2">
+                    <PanelBottom className="h-5 w-5 text-primary" />
+                    <span>Pengaturan Konten Footer Situs</span>
+                  </CardTitle>
+                  <CardDescription className="text-xs mt-1">
+                    Kelola nama brand, deskripsi misi, dan catatan nirlaba yang tampil di sudut kiri bawah seluruh halaman website (tabel: <code>site_settings</code>).
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <form onSubmit={handleSaveFooter} className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                  {/* Left Column: Form Inputs */}
+                  <div className="lg:col-span-7 space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-foreground">
+                        Nama / Judul Brand di Footer <span className="text-destructive">*</span>
+                      </label>
+                      <Input
+                        value={footerForm.title}
+                        onChange={(e) =>
+                          setFooterForm({ ...footerForm, title: e.target.value })
+                        }
+                        placeholder="Contoh: Rumah Literasi"
+                        disabled={isSavingFooter}
+                        required
+                      />
+                      <p className="text-[11px] text-muted-foreground">
+                        Nama inisiatif yang ditampilkan di samping logo buku.
+                      </p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-foreground">
+                        Deskripsi Misi Organisasi <span className="text-destructive">*</span>
+                      </label>
+                      <Textarea
+                        rows={4}
+                        value={footerForm.description}
+                        onChange={(e) =>
+                          setFooterForm({ ...footerForm, description: e.target.value })
+                        }
+                        placeholder="Tuliskan deskripsi ringkas misi dan fokus gerakan..."
+                        disabled={isSavingFooter}
+                        required
+                      />
+                      <p className="text-[11px] text-muted-foreground">
+                        Penjelasan tujuan, penyediaan materi bacaan, dan program literasi.
+                      </p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-foreground">
+                        Catatan Tambahan / Tagline Nirlaba <span className="text-destructive">*</span>
+                      </label>
+                      <Input
+                        value={footerForm.tagline}
+                        onChange={(e) =>
+                          setFooterForm({ ...footerForm, tagline: e.target.value })
+                        }
+                        placeholder="Contoh: Inisiatif independen nirlaba untuk kemajuan nalar bangsa."
+                        disabled={isSavingFooter}
+                        required
+                      />
+                      <p className="text-[11px] text-muted-foreground">
+                        Kalimat pendek di bawah deskripsi utama.
+                      </p>
+                    </div>
+
+                    <div className="pt-2 flex items-center gap-3">
+                      <Button type="submit" disabled={isSavingFooter} className="gap-2">
+                        {isSavingFooter ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <span>Menyimpan ke Database...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Save className="h-4 w-4" />
+                            <span>Simpan Pengaturan Footer</span>
+                          </>
+                        )}
+                      </Button>
+
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setFooterForm(DEFAULT_FOOTER_SETTINGS)}
+                        disabled={isSavingFooter}
+                        className="text-xs"
+                      >
+                        Reset ke Nilai Default
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Live Interactive Preview */}
+                  <div className="lg:col-span-5">
+                    <div className="rounded-lg border border-border bg-muted/30 p-5 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                          <Eye className="h-3.5 w-3.5 text-primary" />
+                          Pratinjau Tampilan Footer
+                        </span>
+                        <Badge variant="outline" className="text-[10px] bg-background">
+                          Live Preview
+                        </Badge>
+                      </div>
+
+                      <div className="rounded-md border border-border bg-white p-5 space-y-4 text-foreground shadow-2xs">
+                        <div className="flex items-center gap-2.5">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-white shrink-0">
+                            <BookOpen className="h-4 w-4 stroke-[1.8]" />
+                          </div>
+                          <span className="font-serif text-lg font-bold tracking-tight text-foreground">
+                            {footerForm.title || "Rumah Literasi"}
+                          </span>
+                        </div>
+
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {footerForm.description || "Membangun budaya membaca, menulis, dan berpikir kritis di Indonesia..."}
+                        </p>
+
+                        <div className="text-xs text-muted-foreground pt-1 border-t border-border/60">
+                          {footerForm.tagline || "Inisiatif independen nirlaba untuk kemajuan nalar bangsa."}
+                        </div>
+                      </div>
+
+                      <p className="text-[11px] text-muted-foreground italic">
+                        * Tampilan di atas adalah representasi langsung kolom kiri footer di situs publik.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
 

@@ -14,13 +14,15 @@ import {
   getFaqsAction,
 } from "@/app/actions/contact-settings";
 import { ContactInfoItem, FAQItem } from "@/lib/contact-types";
+import { getFooterSettingsAction } from "@/app/actions/site-settings";
+import { FooterSettings, DEFAULT_FOOTER_SETTINGS } from "@/lib/site-settings-types";
 
 import { AdminHalamanClient } from "./halaman-client";
 
 export const metadata: Metadata = {
   title: "Kelola Halaman Statis & Tim | Panel Admin",
   description:
-    "Sunting profil organisasi, visi, misi, nilai-nilai, tim redaksi, info kontak, dan FAQ Rumah Literasi.",
+    "Sunting profil organisasi, visi, misi, nilai-nilai, tim redaksi, info kontak, FAQ, dan footer Rumah Literasi.",
 };
 
 export default async function AdminHalamanPage() {
@@ -48,16 +50,24 @@ export default async function AdminHalamanPage() {
   let teamData: TeamMember[] = [];
   let contactData: ContactInfoItem[] = [];
   let faqData: FAQItem[] = [];
+  let footerData: FooterSettings = DEFAULT_FOOTER_SETTINGS;
 
   try {
-    const [fetchedPage, fetchedValues, fetchedTeam, fetchedContact, fetchedFaqs] =
-      await Promise.all([
-        getStaticPage("tentang"),
-        getOrganizationValuesAction(),
-        getTeamMembersAction(),
-        getContactInfoAction(),
-        getFaqsAction(),
-      ]);
+    const [
+      fetchedPage,
+      fetchedValues,
+      fetchedTeam,
+      fetchedContact,
+      fetchedFaqs,
+      fetchedFooter,
+    ] = await Promise.all([
+      getStaticPage("tentang"),
+      getOrganizationValuesAction(),
+      getTeamMembersAction(),
+      getContactInfoAction(),
+      getFaqsAction(),
+      getFooterSettingsAction(),
+    ]);
 
     if (fetchedPage) {
       pageData = fetchedPage;
@@ -67,6 +77,7 @@ export default async function AdminHalamanPage() {
     teamData = fetchedTeam || [];
     contactData = fetchedContact || [];
     faqData = fetchedFaqs || [];
+    footerData = fetchedFooter || DEFAULT_FOOTER_SETTINGS;
   } catch (err) {
     console.error("Gagal mengambil data halaman admin:", err);
     pageData = dummyStaticPages.tentang;
@@ -79,6 +90,7 @@ export default async function AdminHalamanPage() {
       initialTeam={teamData}
       initialContact={contactData}
       initialFaqs={faqData}
+      initialFooter={footerData}
     />
   );
 }

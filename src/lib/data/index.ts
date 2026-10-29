@@ -26,6 +26,10 @@ import {
   DEFAULT_CONTACT_INFO,
   DEFAULT_FAQS,
 } from "@/lib/contact-types";
+import {
+  FooterSettings,
+  DEFAULT_FOOTER_SETTINGS,
+} from "@/lib/site-settings-types";
 
 
 function isSupabaseLive(): boolean {
@@ -765,3 +769,31 @@ export async function getAdminMetricsData() {
     };
   }
 }
+
+export async function getFooterSettings(): Promise<FooterSettings> {
+  if (!isSupabaseLive()) return DEFAULT_FOOTER_SETTINGS;
+
+  try {
+    const supabase = createAdminClient();
+    const { data, error } = await supabase
+      .from("site_settings")
+      .select("key, value")
+      .in("key", ["footer_title", "footer_description", "footer_tagline"]);
+
+    if (error || !data || data.length === 0) return DEFAULT_FOOTER_SETTINGS;
+
+    const map = new Map<string, string>();
+    for (const item of data) {
+      map.set(item.key, item.value);
+    }
+
+    return {
+      title: map.get("footer_title") || DEFAULT_FOOTER_SETTINGS.title,
+      description: map.get("footer_description") || DEFAULT_FOOTER_SETTINGS.description,
+      tagline: map.get("footer_tagline") || DEFAULT_FOOTER_SETTINGS.tagline,
+    };
+  } catch {
+    return DEFAULT_FOOTER_SETTINGS;
+  }
+}
+
