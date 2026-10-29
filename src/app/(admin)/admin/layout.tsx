@@ -21,6 +21,7 @@ import {
   ExternalLink,
   Menu,
   X,
+  LineChart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,7 @@ const ADMIN_MODULES = [
   { href: "/admin", label: "Ringkasan Dasbor", icon: LayoutDashboard },
   { href: "/admin/pengguna", label: "Kelola Pengguna", icon: UserCog },
   { href: "/admin/artikel", label: "Kelola Artikel", icon: FileText },
+  { href: "/admin/analitik-bacaan", label: "Analitik Bacaan", icon: LineChart },
   { href: "/admin/kategori", label: "Kategori Artikel", icon: FolderTree },
   { href: "/admin/resource", label: "Resource Hub", icon: FolderArchive },
   { href: "/admin/statistik", label: "Statistik & Fakta", icon: BarChart2 },

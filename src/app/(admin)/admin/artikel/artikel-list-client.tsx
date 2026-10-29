@@ -10,6 +10,7 @@ import {
   Eye,
   FileText,
   Clock,
+  LineChart,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -76,12 +77,20 @@ export function AdminArtikelListClient({
           </p>
         </div>
 
-        <Link href="/admin/artikel/baru">
-          <Button className="gap-2 shadow-xs">
-            <Plus className="h-4 w-4" />
-            <span>Tulis Artikel Baru</span>
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/admin/analitik-bacaan">
+            <Button variant="outline" className="gap-2 shadow-xs">
+              <LineChart className="h-4 w-4 text-primary" />
+              <span>Analitik Bacaan</span>
+            </Button>
+          </Link>
+          <Link href="/admin/artikel/baru">
+            <Button className="gap-2 shadow-xs">
+              <Plus className="h-4 w-4" />
+              <span>Tulis Artikel Baru</span>
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
@@ -176,6 +185,14 @@ export function AdminArtikelListClient({
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
+                      {art.status === "published" && (
+                        <Link href="/admin/analitik-bacaan" title="Lihat Analitik Bacaan">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary">
+                            <LineChart className="h-3.5 w-3.5" />
+                            <span className="sr-only">Analitik Bacaan</span>
+                          </Button>
+                        </Link>
+                      )}
                       {art.status === "published" && (
                         <Link href={`/artikel/${art.slug}`} target="_blank">
                           <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">

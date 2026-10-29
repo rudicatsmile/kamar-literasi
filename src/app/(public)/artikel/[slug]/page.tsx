@@ -17,6 +17,7 @@ import { getArticleBySlug, getArticles } from "@/lib/data";
 import { dummyArticles } from "@/lib/dummy-data";
 import { ShareButtons } from "./share-buttons";
 import { ReadingControls } from "@/components/reading/reading-controls";
+import { ReadingTracker } from "@/components/reading/reading-tracker";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 function getInitials(name: string) {
@@ -101,6 +102,10 @@ export default async function DetailArtikelPage({
   return (
     <article className="rd-surface min-h-[70vh] py-12 md:py-20">
       <ReadingControls />
+      <ReadingTracker
+        articleId={article.id}
+        estimatedTimeMinutes={article.reading_time}
+      />
       <ArticleJsonLd
         title={article.title}
         description={article.excerpt}

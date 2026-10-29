@@ -7,13 +7,23 @@ import {
   Send,
   MessageSquare,
   UserCog,
+  LineChart,
+  Clock,
+  TrendingUp,
+  ArrowRight,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getAdminMetricsData } from "@/lib/data";
+import { getReadingAnalyticsSummary } from "@/app/actions/reading-analytics";
 
 export default async function AdminDashboardPage() {
+  const [metricsData, readingAnalytics] = await Promise.all([
+    getAdminMetricsData(),
+    getReadingAnalyticsSummary("30d"),
+  ]);
+
   const {
     totalArticles,
     publishedArticles,
@@ -23,7 +33,7 @@ export default async function AdminDashboardPage() {
     totalParticipants,
     recentArticles,
     recentSubscribers,
-  } = await getAdminMetricsData();
+  } = metricsData;
 
   return (
     <div className="space-y-8">
@@ -42,6 +52,12 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          <Link href="/admin/analitik-bacaan">
+            <Button variant="outline" size="sm" className="gap-1.5 border-primary/30 text-primary hover:bg-primary/5">
+              <LineChart className="h-4 w-4" />
+              <span>Analitik Bacaan</span>
+            </Button>
+          </Link>
           <Link href="/admin/pengguna">
             <Button variant="outline" size="sm" className="gap-1.5">
               <UserCog className="h-4 w-4" />
@@ -126,6 +142,34 @@ export default async function AdminDashboardPage() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Reading Analytics Spotlight Banner */}
+      <div className="rounded-xl border border-primary/20 bg-linear-to-r from-primary/5 via-primary/[0.02] to-transparent p-5 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-[10px] bg-white border-primary/30 text-primary">
+                Reading Drop-off Analytics
+              </Badge>
+              <span className="text-xs text-muted-foreground font-medium">
+                Metrik Perilaku Membaca (30 Hari Terakhir)
+              </span>
+            </div>
+            <h4 className="font-serif text-lg font-bold text-foreground">
+              Tingkat Keterbacaan Tuntas: {readingAnalytics.averageCompletionRate}% • Waktu Baca Rata-rata: {readingAnalytics.averageActualDurationFormatted}
+            </h4>
+            <p className="text-xs text-muted-foreground">
+              Total {readingAnalytics.totalSessions.toLocaleString("id-ID")} sesi membaca tercatat. Titik penurunan paling dominan terjadi di {readingAnalytics.topDropoffPoint.label}.
+            </p>
+          </div>
+          <Link href="/admin/analitik-bacaan">
+            <Button size="sm" className="gap-1.5 shrink-0 text-xs shadow-xs">
+              <span>Buka Analitik Lengkap</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Recent Activity & Quick Navigation */}
