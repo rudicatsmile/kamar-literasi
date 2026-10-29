@@ -181,7 +181,7 @@ export default function KontakPage() {
                   <Mail className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold text-foreground">Surel Resmi</p>
-                    <p className="text-muted-foreground">redaksi@masyarakatliterasi.id</p>
+                    <p className="text-muted-foreground">rudi.catsmile@gmail.com</p>
                   </div>
                 </div>
 
@@ -189,7 +189,7 @@ export default function KontakPage() {
                   <MessageSquare className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold text-foreground">WhatsApp Gateway Info</p>
-                    <p className="text-muted-foreground">+62 812-3456-7890 (Hanya pesan)</p>
+                    <p className="text-muted-foreground">+62 813-6715-5656 (Hanya pesan)</p>
                   </div>
                 </div>
 
@@ -198,7 +198,7 @@ export default function KontakPage() {
                   <div>
                     <p className="font-semibold text-foreground">Sekretariat Gerakan</p>
                     <p className="text-muted-foreground">
-                      Jl. Pustaka Aksara No. 42, Menteng, Jakarta Pusat 10310
+                      Jl. Kurnia No.16 RT 007/17 Tugu Utara - Koja Jakarta Utara
                     </p>
                   </div>
                 </div>
