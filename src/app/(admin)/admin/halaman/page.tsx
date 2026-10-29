@@ -3,11 +3,18 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getStaticPage } from "@/lib/data";
 import { dummyStaticPages } from "@/lib/dummy-data";
+import {
+  getOrganizationValuesAction,
+  getTeamMembersAction,
+  OrganizationValue,
+  TeamMember,
+} from "@/app/actions/team-and-values";
 import { AdminHalamanClient } from "./halaman-client";
 
 export const metadata: Metadata = {
-  title: "Kelola Halaman Statis | Panel Admin",
-  description: "Sunting profil organisasi, visi, misi, dan latar belakang gerakan Masyarakat Literasi.",
+  title: "Kelola Halaman Statis & Tim | Panel Admin",
+  description:
+    "Sunting profil organisasi, visi, misi, nilai-nilai, dan tim redaksi Masyarakat Literasi.",
 };
 
 export default async function AdminHalamanPage() {
@@ -31,15 +38,53 @@ export default async function AdminHalamanPage() {
   }
 
   let pageData = dummyStaticPages.tentang;
+  let valuesData: OrganizationValue[] = [];
+  let teamData: TeamMember[] = [];
 
   try {
-    const fetched = await getStaticPage("tentang");
-    if (fetched) {
-      pageData = fetched;
+    const [fetchedPage, fetchedValues, fetchedTeam] = await Promise.all([
+      getStaticPage("tentang"),
+      getOrganizationValuesAction(),
+      getTeamMembersAction(),
+    ]);
+
+    if (fetchedPage) {
+      pageData = fetchedPage;
     }
-  } catch {
+
+    valuesData =
+      fetchedValues && fetchedValues.length > 0
+        ? fetchedValues
+        : dummyStaticPages.tentang.values.map((v, i) => ({
+            id: `temp-val-${i}`,
+            title: v.title,
+            description: v.desc,
+            sort_order: i + 1,
+            is_active: true,
+          }));
+
+    teamData =
+      fetchedTeam && fetchedTeam.length > 0
+        ? fetchedTeam
+        : dummyStaticPages.tentang.team.map((t, i) => ({
+            id: `temp-team-${i}`,
+            name: t.name,
+            position: t.role,
+            photo_url: t.avatar,
+            bio: "",
+            sort_order: i + 1,
+            is_active: true,
+          }));
+  } catch (err) {
+    console.error("Gagal mengambil data halaman admin:", err);
     pageData = dummyStaticPages.tentang;
   }
 
-  return <AdminHalamanClient initialData={pageData} />;
+  return (
+    <AdminHalamanClient
+      initialData={pageData}
+      initialValues={valuesData}
+      initialTeam={teamData}
+    />
+  );
 }

@@ -358,6 +358,77 @@ export async function getStaticPage(slug: string) {
   }
 }
 
+export async function getOrganizationValues(): Promise<
+  Array<{ id?: string; title: string; desc: string; order?: number }>
+> {
+  if (!isSupabaseLive()) {
+    return dummyStaticPages.tentang.values;
+  }
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("nilai")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+
+    if (!error && data && data.length > 0) {
+      return data.map((item: any) => ({
+        id: item.id,
+        title: item.title,
+        desc: item.description,
+        order: item.sort_order ?? 0,
+      }));
+    }
+  } catch (err) {
+    console.error("Gagal mengambil tabel nilai:", err);
+  }
+
+  return dummyStaticPages.tentang.values;
+}
+
+export async function getTeamMembers(): Promise<
+  Array<{
+    id?: string;
+    name: string;
+    role: string;
+    avatar: string;
+    bio?: string;
+    order?: number;
+  }>
+> {
+  if (!isSupabaseLive()) {
+    return dummyStaticPages.tentang.team;
+  }
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("team_members")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+
+    if (!error && data && data.length > 0) {
+      return data.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        role: item.position,
+        avatar:
+          item.photo_url ||
+          `https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop`,
+        bio: item.bio || undefined,
+        order: item.sort_order ?? 0,
+      }));
+    }
+  } catch (err) {
+    console.error("Gagal mengambil tabel team_members:", err);
+  }
+
+  return dummyStaticPages.tentang.team;
+}
+
 // ==============================================================================
 // MEMBER DATA ACCESS HELPERS
 // ==============================================================================
