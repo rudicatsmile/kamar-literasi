@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   BarChart3,
   BookOpen,
@@ -61,6 +62,7 @@ interface AnalitikBacaanClientProps {
 export function AnalitikBacaanClient({
   initialData,
 }: AnalitikBacaanClientProps) {
+  const router = useRouter();
   const [data, setData] = React.useState<ReadingAnalyticsSummary>(initialData);
   const [timeRange, setTimeRange] = React.useState<"7d" | "30d" | "all">("30d");
   const [loading, setLoading] = React.useState(false);
@@ -96,7 +98,8 @@ export function AnalitikBacaanClient({
     try {
       const refreshed = await getReadingAnalyticsSummary(timeRange);
       setData(refreshed);
-      toast.success("Data analitik membaca berhasil disinkronkan.");
+      router.refresh();
+      toast.success("Data analitik membaca berhasil disinkronkan langsung dari database.");
     } catch {
       toast.error("Gagal menyegarkan data.");
     } finally {

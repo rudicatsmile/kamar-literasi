@@ -46,6 +46,11 @@ export function ReadingTracker({
     (force: boolean = false) => {
       if (typeof window === "undefined" || !sessionIdRef.current) return;
 
+      // Jangan kirim data bila durasi 0 detik dan belum melakukan scroll sama sekali
+      if (durationSecondsRef.current === 0 && maxScrollDepthRef.current === 0) {
+        return;
+      }
+
       const payload: ReadingBeaconPayload = {
         articleId,
         sessionId: sessionIdRef.current,

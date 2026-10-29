@@ -2,6 +2,9 @@ import { Metadata } from "next";
 import { getReadingAnalyticsSummary } from "@/app/actions/reading-analytics";
 import { AnalitikBacaanClient } from "./analitik-bacaan-client";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Analitik Perilaku Membaca - Panel Redaksi Rumah Literasi",
   description:

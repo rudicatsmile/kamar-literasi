@@ -36,6 +36,11 @@ export async function POST(req: NextRequest) {
     const cleanDuration = Math.max(0, Math.min(86400, Math.round(Number(durationSeconds) || 0)));
     const cleanCompleted = Boolean(isCompleted);
 
+    // Jangan rekam jika scroll 0 dan durasi 0 (misal bot crawler atau prefetch)
+    if (cleanScroll === 0 && cleanDuration === 0) {
+      return NextResponse.json({ success: true, notice: "Abaikan sesi kosong" });
+    }
+
     // Kirim / Upsert ke Supabase
     try {
       const supabase = createAdminClient();
