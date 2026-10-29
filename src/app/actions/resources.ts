@@ -12,7 +12,7 @@ const ResourceSchema = z.object({
   description: z.string().min(5, "Deskripsi minimal 5 karakter."),
   type: z.enum(["book", "tool", "pdf"]),
   age_category: z.enum(["anak", "remaja", "dewasa", "semua"]).default("semua"),
-  publisher: z.string().default("Masyarakat Literasi"),
+  publisher: z.string().default("Rumah Literasi"),
   cover_url: z.string().optional(),
   external_url: z.string().optional(),
   file_path: z.string().optional(),

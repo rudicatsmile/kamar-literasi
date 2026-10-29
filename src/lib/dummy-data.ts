@@ -743,7 +743,7 @@ export const dummyBroadcasts: Broadcast[] = [
     id: "a1000000-0000-0000-0000-000000000001",
     title: "Buletin Literasi Edisi Oktober 2026",
     message: "Halo Sahabat Literasi! Edisi kali ini membahas 5 langkah jitu mengenali hoaks di linimasa keluarga dan pengumuman tantangan 7 hari membaca edisi November. Simak ulasan lengkapnya di website!",
-    created_by_name: "Admin Masyarakat Literasi",
+    created_by_name: "Admin Rumah Literasi",
     sent_at: "2026-10-20T09:00:00Z",
     total_recipients: 1420,
     status: "sent",
@@ -753,7 +753,7 @@ export const dummyBroadcasts: Broadcast[] = [
     id: "a1000000-0000-0000-0000-000000000002",
     title: "Pengingat: Evaluasi Pekan Membaca Nasional",
     message: "Sudahkah Anda membaca 10 halaman hari ini? Jangan biarkan streak tantangan Anda terputus. Klik tautan berikut untuk check-in sekarang!",
-    created_by_name: "Admin Masyarakat Literasi",
+    created_by_name: "Admin Rumah Literasi",
     sent_at: "2026-10-25T19:00:00Z",
     total_recipients: 980,
     status: "sent",
@@ -767,7 +767,7 @@ export const dummyContactMessages: ContactMessage[] = [
     name: "Farhan Hakim",
     email: "farhan.hakim@sekolahkita.sch.id",
     subject: "Kolaborasi Pelatihan Literasi Guru",
-    message: "Halo Tim Masyarakat Literasi, kami dari yayasan pendidikan ingin mengundang narasumber untuk workshop literasi digital dan berpikir kritis bagi 60 guru SMP kami.",
+    message: "Halo Tim Rumah Literasi, kami dari yayasan pendidikan ingin mengundang narasumber untuk workshop literasi digital dan berpikir kritis bagi 60 guru SMP kami.",
     is_read: false,
     created_at: "2026-10-27T10:15:00Z",
   },
@@ -776,7 +776,7 @@ export const dummyContactMessages: ContactMessage[] = [
     name: "Ratna Sari",
     email: "ratna.sari@komunitasbaca.org",
     subject: "Donasi Buku untuk Taman Bacaan Desa",
-    message: "Selamat siang. Apakah Masyarakat Literasi membuka penyaluran buku fisik atau panduan kurikulum untuk perpustakaan desa kami di Wonosobo?",
+    message: "Selamat siang. Apakah Rumah Literasi membuka penyaluran buku fisik atau panduan kurikulum untuk perpustakaan desa kami di Wonosobo?",
     is_read: true,
     created_at: "2026-10-25T14:40:00Z",
   },
@@ -784,14 +784,14 @@ export const dummyContactMessages: ContactMessage[] = [
 
 export const dummyStaticPages = {
   tentang: {
-    title: "Tentang Kami - Masyarakat Literasi",
+    title: "Tentang Kami - Rumah Literasi",
     subtitle: "Membangun Gerakan Membaca, Menulis, dan Bernalar Kritis untuk Generasi Emas Indonesia",
     story: `
-Masyarakat Literasi lahir dari kegelisahan sederhana: mengapa di tengah banjir informasi digital dan kepemilikan smartphone yang masif di Indonesia, kemampuan menyerap bacaan mendalam dan bernalar kritis justru terasa kian tergerus?
+Rumah Literasi lahir dari kegelisahan sederhana: mengapa di tengah banjir informasi digital dan kepemilikan smartphone yang masif di Indonesia, kemampuan menyerap bacaan mendalam dan bernalar kritis justru terasa kian tergerus?
 
 Data menunjukkan bahwa orang Indonesia menghabiskan berjam-jam menatap layar setiap hari, namun sering kali terseret arus judul sensasional, potongan video tanpa konteks, dan perdebatan kusir yang melelahkan. Kami percaya bahwa literasi sejati bukan hanya tentang kemampuan mengeja aksara, melainkan kecakapan menyaring makna, menguji kebenaran, dan berempati terhadap perspektif yang berbeda.
 
-Didirikan pada tahun 2025 oleh sekelompok pendidik, penulis, dan pemerhati teknologi, Masyarakat Literasi hadir sebagai ruang singgah yang meneduhkan: menyajikan artikel pilihan bergaya majalah, repositori bahan ajar gratis, serta tantangan kebiasaan membaca harian yang terukur dan membumi.
+Didirikan pada tahun 2025 oleh sekelompok pendidik, penulis, dan pemerhati teknologi, Rumah Literasi hadir sebagai ruang singgah yang meneduhkan: menyajikan artikel pilihan bergaya majalah, repositori bahan ajar gratis, serta tantangan kebiasaan membaca harian yang terukur dan membumi.
     `,
     visi: "Terwujudnya masyarakat Indonesia yang cerdas bernalar, berwawasan luas, serta gemar membaca dan berkarya secara kritis dan beradab.",
     misi: [

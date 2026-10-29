@@ -15,11 +15,11 @@ import { dummyStaticPages } from "@/lib/dummy-data";
 export const metadata: Metadata = {
   title: "Tentang Kami - Visi, Misi & Tim Penggerak",
   description:
-    "Mengenal visi, misi, nilai-nilai, dan cerita latar belakang gerakan Masyarakat Literasi di Indonesia.",
+    "Mengenal visi, misi, nilai-nilai, dan cerita latar belakang gerakan Rumah Literasi di Indonesia.",
   openGraph: {
-    title: "Tentang Kami - Visi, Misi & Tim Penggerak Masyarakat Literasi",
+    title: "Tentang Kami - Visi, Misi & Tim Penggerak Rumah Literasi",
     description:
-      "Mengenal visi, misi, nilai-nilai, dan cerita latar belakang gerakan Masyarakat Literasi di Indonesia.",
+      "Mengenal visi, misi, nilai-nilai, dan cerita latar belakang gerakan Rumah Literasi di Indonesia.",
   },
 };
 
@@ -53,20 +53,20 @@ export default async function TentangPage() {
     organizationValues && organizationValues.length > 0
       ? organizationValues
       : (tentang.values || []).map((v: any, i: number) => ({
-          title: v.title,
-          desc: v.desc,
-          order: i + 1,
-        }));
+        title: v.title,
+        desc: v.desc,
+        order: i + 1,
+      }));
 
   const team: DisplayTeam[] =
     teamMembers && teamMembers.length > 0
       ? teamMembers
       : (tentang.team || []).map((t: any, i: number) => ({
-          name: t.name,
-          role: t.role,
-          avatar: t.avatar,
-          order: i + 1,
-        }));
+        name: t.name,
+        role: t.role,
+        avatar: t.avatar,
+        order: i + 1,
+      }));
 
   return (
     <div className="py-12 md:py-20 bg-background min-h-screen">
@@ -139,8 +139,12 @@ export default async function TentangPage() {
         <div className="space-y-6 border-t border-border pt-10">
           <div className="border-b border-border pb-4">
             <h2 className="font-serif text-2xl font-bold text-foreground">
-              Nilai-Nilai yang Kami Pegang Teguh
+              {tentang.values_title || "Nilai-Nilai yang Kami Pegang Teguh"}
             </h2>
+            <p className="text-xs text-muted-foreground mt-1">
+              {tentang.values_subtitle ||
+                "Prinsip dan integritas yang kami jadikan kompas dalam setiap langkah dan kurasi bacaan."}
+            </p>
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
@@ -167,10 +171,11 @@ export default async function TentangPage() {
         <div className="space-y-6 border-t border-border pt-10">
           <div className="border-b border-border pb-4">
             <h2 className="font-serif text-2xl font-bold text-foreground">
-              Tim Penggerak & Redaksi
+              {tentang.team_title || "Pengurus Tim Penggerak & Redaksi"}
             </h2>
             <p className="text-xs text-muted-foreground mt-1">
-              Kolaborasi lintas disiplin antara kurator buku, pendidik, dan pegiat literasi.
+              {tentang.team_subtitle ||
+                "Daftar profil dan foto kurator/redaksi yang tampil di rute publik /tentang"}
             </p>
           </div>
 

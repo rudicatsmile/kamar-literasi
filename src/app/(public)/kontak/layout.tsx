@@ -3,11 +3,11 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Hubungi Kami - Aspirasi, Kolaborasi & Pertanyaan",
   description:
-    "Kirimkan aspirasi, pertanyaan, atau tawaran kolaborasi program literasi bersama tim Masyarakat Literasi.",
+    "Kirimkan aspirasi, pertanyaan, atau tawaran kolaborasi program literasi bersama tim Rumah Literasi.",
   openGraph: {
-    title: "Hubungi Kami - Aspirasi, Kolaborasi & Pertanyaan - Masyarakat Literasi",
+    title: "Hubungi Kami - Aspirasi, Kolaborasi & Pertanyaan - Rumah Literasi",
     description:
-      "Kirimkan aspirasi, pertanyaan, atau tawaran kolaborasi program literasi bersama tim Masyarakat Literasi.",
+      "Kirimkan aspirasi, pertanyaan, atau tawaran kolaborasi program literasi bersama tim Rumah Literasi.",
   },
 };
 

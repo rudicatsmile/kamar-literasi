@@ -20,7 +20,7 @@ export default async function AdminResourcePage() {
         description: r.description || "",
         type: r.type,
         age_category: r.age_category || "semua",
-        publisher: r.publisher || "Masyarakat Literasi",
+        publisher: r.publisher || "Rumah Literasi",
         cover_url: r.cover_url || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop",
         download_count: r.download_count || 0,
         status: r.status || "published",

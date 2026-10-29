@@ -34,7 +34,7 @@ export async function generateMetadata({
 
   if (!article) {
     return {
-      title: "Artikel Tidak Ditemukan - Masyarakat Literasi",
+      title: "Artikel Tidak Ditemukan - Rumah Literasi",
     };
   }
 
@@ -42,13 +42,13 @@ export async function generateMetadata({
   const url = `${baseUrl}/artikel/${article.slug}`;
 
   return {
-    title: `${article.title} - Masyarakat Literasi`,
+    title: `${article.title} - Rumah Literasi`,
     description: article.excerpt,
     openGraph: {
       title: article.title,
       description: article.excerpt,
       url,
-      siteName: "Masyarakat Literasi",
+      siteName: "Rumah Literasi",
       images: [
         {
           url: article.cover_url,

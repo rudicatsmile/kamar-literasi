@@ -22,8 +22,8 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://rumahliterasi.web.id
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Masyarakat Literasi - Gerakan Membaca & Berpikir Kritis Indonesia",
-    template: "%s | Masyarakat Literasi",
+    default: "Rumah Literasi - Gerakan Membaca & Berpikir Kritis Indonesia",
+    template: "%s | Rumah Literasi",
   },
   description:
     "Platform edukatif untuk meningkatkan kesadaran literasi membaca, digital, berpikir kritis, dan sumber materi belajar gratis di Indonesia.",
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
     "buku indonesia",
     "resource pendidikan",
   ],
-  authors: [{ name: "Redaksi Masyarakat Literasi" }],
-  creator: "Masyarakat Literasi",
+  authors: [{ name: "Redaksi Rumah Literasi" }],
+  creator: "Rumah Literasi",
   alternates: {
     canonical: "./",
   },
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "id_ID",
     url: baseUrl,
-    siteName: "Masyarakat Literasi",
-    title: "Masyarakat Literasi - Gerakan Membaca & Berpikir Kritis Indonesia",
+    siteName: "Rumah Literasi",
+    title: "Rumah Literasi - Gerakan Membaca & Berpikir Kritis Indonesia",
     description:
       "Platform edukatif untuk meningkatkan kesadaran literasi membaca, digital, berpikir kritis, dan sumber materi belajar gratis di Indonesia.",
     images: [
@@ -54,13 +54,13 @@ export const metadata: Metadata = {
         url: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=1200&auto=format&fit=crop",
         width: 1200,
         height: 630,
-        alt: "Masyarakat Literasi Indonesia",
+        alt: "Rumah Literasi Indonesia",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Masyarakat Literasi - Gerakan Membaca & Berpikir Kritis Indonesia",
+    title: "Rumah Literasi - Gerakan Membaca & Berpikir Kritis Indonesia",
     description:
       "Platform edukatif untuk meningkatkan kesadaran literasi membaca, digital, berpikir kritis, dan sumber materi belajar gratis di Indonesia.",
     images: [

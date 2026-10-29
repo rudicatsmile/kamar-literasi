@@ -14,7 +14,7 @@ import { AdminHalamanClient } from "./halaman-client";
 export const metadata: Metadata = {
   title: "Kelola Halaman Statis & Tim | Panel Admin",
   description:
-    "Sunting profil organisasi, visi, misi, nilai-nilai, dan tim redaksi Masyarakat Literasi.",
+    "Sunting profil organisasi, visi, misi, nilai-nilai, dan tim redaksi Rumah Literasi.",
 };
 
 export default async function AdminHalamanPage() {
@@ -56,25 +56,25 @@ export default async function AdminHalamanPage() {
       fetchedValues && fetchedValues.length > 0
         ? fetchedValues
         : dummyStaticPages.tentang.values.map((v, i) => ({
-            id: `temp-val-${i}`,
-            title: v.title,
-            description: v.desc,
-            sort_order: i + 1,
-            is_active: true,
-          }));
+          id: `temp-val-${i}`,
+          title: v.title,
+          description: v.desc,
+          sort_order: i + 1,
+          is_active: true,
+        }));
 
     teamData =
       fetchedTeam && fetchedTeam.length > 0
         ? fetchedTeam
         : dummyStaticPages.tentang.team.map((t, i) => ({
-            id: `temp-team-${i}`,
-            name: t.name,
-            position: t.role,
-            photo_url: t.avatar,
-            bio: "",
-            sort_order: i + 1,
-            is_active: true,
-          }));
+          id: `temp-team-${i}`,
+          name: t.name,
+          position: t.role,
+          photo_url: t.avatar,
+          bio: "",
+          sort_order: i + 1,
+          is_active: true,
+        }));
   } catch (err) {
     console.error("Gagal mengambil data halaman admin:", err);
     pageData = dummyStaticPages.tentang;

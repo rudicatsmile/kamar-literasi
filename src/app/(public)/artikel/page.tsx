@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Eksplorasi wawasan kritis, panduan kebiasaan membaca mendalam, dan literasi digital untuk membentengi nalar Anda.",
   openGraph: {
-    title: "Artikel, Esai & Wawasan Literasi - Masyarakat Literasi",
+    title: "Artikel, Esai & Wawasan Literasi - Rumah Literasi",
     description:
       "Eksplorasi wawasan kritis, panduan kebiasaan membaca mendalam, dan literasi digital untuk membentengi nalar Anda.",
   },

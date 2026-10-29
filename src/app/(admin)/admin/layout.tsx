@@ -64,7 +64,7 @@ function AdminLayoutContent({
                 Panel Redaksi
               </span>
               <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">
-                Masyarakat Literasi
+                Rumah Literasi
               </span>
             </div>
           </Link>

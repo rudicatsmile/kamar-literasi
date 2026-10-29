@@ -40,7 +40,7 @@ export function Footer() {
                 <BookOpen className="h-4 w-4 stroke-[1.8]" />
               </div>
               <span className="font-serif text-lg font-bold tracking-tight text-foreground">
-                Masyarakat Literasi
+                Rumah Literasi
               </span>
             </Link>
             <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
@@ -132,7 +132,7 @@ export function Footer() {
         {/* Bottom Credits */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row text-xs text-muted-foreground">
           <div>
-            &copy; 2026 Masyarakat Literasi. Hak Cipta Dilindungi.
+            &copy; 2026 Rumah Literasi. Hak Cipta Dilindungi.
           </div>
           <div className="flex items-center gap-6">
             <Link href="/tentang" className="hover:text-primary">

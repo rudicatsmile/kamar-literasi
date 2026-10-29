@@ -164,7 +164,7 @@ export default function DaftarPage() {
               className="mt-0.5"
             />
             <label htmlFor="terms" className="text-xs text-muted-foreground leading-snug cursor-pointer">
-              Saya menyetujui Pedoman Komunitas dan Kebijakan Privasi Masyarakat Literasi.
+              Saya menyetujui Pedoman Komunitas dan Kebijakan Privasi Rumah Literasi.
             </label>
           </div>
 

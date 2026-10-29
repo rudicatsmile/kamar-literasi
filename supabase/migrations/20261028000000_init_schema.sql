@@ -1,5 +1,5 @@
 -- ==========================================================
--- MASYARAKAT LITERASI - COMPLETE DATABASE SCHEMA MIGRATION
+-- Rumah Literasi - COMPLETE DATABASE SCHEMA MIGRATION
 -- Based on PRD Chapter 10
 -- ==========================================================
 
@@ -91,7 +91,7 @@ create table if not exists resources (
   external_url text,
   file_path text,
   cover_url text,
-  publisher text not null default 'Masyarakat Literasi',
+  publisher text not null default 'Rumah Literasi',
   rating numeric(3,2) default 4.8,
   download_count int not null default 0,
   status content_status not null default 'draft',

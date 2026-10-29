@@ -345,7 +345,18 @@ export async function getStaticPage(slug: string) {
         subtitle: parsedContent.subtitle ?? dummyStaticPages.tentang.subtitle,
         story: parsedContent.story ?? (typeof data.content === "string" && !data.content.startsWith("{") ? data.content : dummyStaticPages.tentang.story),
         visi: parsedContent.visi ?? dummyStaticPages.tentang.visi,
-        misi: Array.isArray(parsedContent.misi) && parsedContent.misi.length > 0 ? parsedContent.misi : dummyStaticPages.tentang.misi,
+        team_title:
+          parsedContent.team_title ||
+          "Pengurus Tim Penggerak & Redaksi",
+        team_subtitle:
+          parsedContent.team_subtitle ||
+          "Daftar profil dan foto kurator/redaksi yang tampil di rute publik /tentang",
+        values_title:
+          parsedContent.values_title ||
+          "Nilai-Nilai yang Kami Pegang Teguh",
+        values_subtitle:
+          parsedContent.values_subtitle ||
+          "Prinsip dan pedoman etis yang kami pegang dalam memajukan literasi bangsa.",
         values: Array.isArray(parsedContent.values) && parsedContent.values.length > 0 ? parsedContent.values : dummyStaticPages.tentang.values,
         team: Array.isArray(parsedContent.team) && parsedContent.team.length > 0 ? parsedContent.team : dummyStaticPages.tentang.team,
       };

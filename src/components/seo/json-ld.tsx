@@ -4,7 +4,7 @@ export function OrganizationJsonLd() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Masyarakat Literasi",
+    name: "Rumah Literasi",
     url: "https://rumahliterasi.web.id",
     logo: "https://rumahliterasi.web.id/logo.png",
     description:
@@ -55,7 +55,7 @@ export function ArticleJsonLd({
     },
     publisher: {
       "@type": "Organization",
-      name: "Masyarakat Literasi",
+      name: "Rumah Literasi",
       logo: {
         "@type": "ImageObject",
         url: "https://rumahliterasi.web.id/logo.png",

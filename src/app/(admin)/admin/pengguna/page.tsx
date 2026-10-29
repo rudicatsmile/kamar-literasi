@@ -7,7 +7,7 @@ import { AdminPenggunaClient } from "./pengguna-client";
 
 export const metadata: Metadata = {
   title: "Kelola Pengguna | Panel Admin",
-  description: "Manajemen data akun administrator dan member Masyarakat Literasi.",
+  description: "Manajemen data akun administrator dan member Rumah Literasi.",
 };
 
 export default async function AdminPenggunaPage() {

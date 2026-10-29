@@ -1,11 +1,11 @@
-# Masyarakat Literasi
+# Rumah Literasi
 
 ---
 
 ## 1. Ringkasan & Tujuan Aplikasi
 
 *Bagian ini menjelaskan gambaran umum proyek agar dipahami bersama oleh pemilik ide/klien dan tim pengembang.*
-- **Nama Aplikasi**: Masyarakat Literasi
+- **Nama Aplikasi**: Rumah Literasi
 - **Penjelasan Singkat**: Website edukatif yang meningkatkan kesadaran tentang pentingnya literasi (membaca, menulis, berpikir kritis, digital, dan informasi) di Indonesia. Pengunjung mendapat artikel, fakta, sumber belajar gratis, serta tantangan kebiasaan 7/21/30 hari yang progresnya tersimpan di akun mereka.
 - **Masalah yang Diselesaikan**:
   - Kesadaran masyarakat tentang dampak literasi terhadap kualitas hidup, ekonomi, dan pembangunan sosial masih rendah.

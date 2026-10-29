@@ -20,7 +20,7 @@ export function ShareButtons({ title }: { title: string }) {
   const handleWhatsAppShare = () => {
     if (typeof window !== "undefined") {
       const url = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent(`Baca esai menarik ini: "${title}" di Masyarakat Literasi: `);
+      const text = encodeURIComponent(`Baca esai menarik ini: "${title}" di Rumah Literasi: `);
       window.open(`https://wa.me/?text=${text}${url}`, "_blank");
     }
   };

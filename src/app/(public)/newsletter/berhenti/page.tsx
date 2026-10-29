@@ -51,7 +51,7 @@ export default function BerhentiLanggananPage() {
                 Berhenti Berlangganan Berhasil
               </h1>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Nomor Anda tidak akan lagi menerima pesan siaran buletin berkala dari Masyarakat Literasi. Terima kasih telah sempat menjadi bagian dari kami.
+                Nomor Anda tidak akan lagi menerima pesan siaran buletin berkala dari Rumah Literasi. Terima kasih telah sempat menjadi bagian dari kami.
               </p>
               <div className="pt-2">
                 <Link href="/">

@@ -30,7 +30,7 @@ function NavbarContent() {
           </div>
           <div className="flex flex-col">
             <span className="font-serif text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
-              Masyarakat Literasi
+              Rumah Literasi
             </span>
             <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
               Edukasi & Nalar Kritis

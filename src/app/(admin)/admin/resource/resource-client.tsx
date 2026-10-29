@@ -121,7 +121,7 @@ export function AdminResourceClient({ initialResources }: { initialResources: Re
         description,
         type,
         age_category: ageCategory,
-        publisher: publisher || "Masyarakat Literasi",
+        publisher: publisher || "Rumah Literasi",
         cover_url: coverUrl,
         external_url: externalUrl || undefined,
         file_path: filePath || undefined,
@@ -137,17 +137,17 @@ export function AdminResourceClient({ initialResources }: { initialResources: Re
           resources.map((r) =>
             r.id === editingRes.id
               ? {
-                  ...r,
-                  title,
-                  slug,
-                  description,
-                  type,
-                  age_category: ageCategory,
-                  publisher: publisher || "Masyarakat Literasi",
-                  cover_url: coverUrl,
-                  external_url: externalUrl || undefined,
-                  file_path: filePath || undefined,
-                }
+                ...r,
+                title,
+                slug,
+                description,
+                type,
+                age_category: ageCategory,
+                publisher: publisher || "Rumah Literasi",
+                cover_url: coverUrl,
+                external_url: externalUrl || undefined,
+                file_path: filePath || undefined,
+              }
               : r
           )
         );

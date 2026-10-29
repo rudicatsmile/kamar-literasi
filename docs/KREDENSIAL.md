@@ -1,6 +1,6 @@
-# Dokumentasi Kredensial Aplikasi — Masyarakat Literasi
+# Dokumentasi Kredensial Aplikasi — Rumah Literasi
 
-Dokumen ini memuat seluruh akun pengguna resmi, kunci otorisasi database Supabase, dan parameter integrasi layanan pihak ketiga yang aktif digunakan dalam sistem aplikasi **Masyarakat Literasi**.
+Dokumen ini memuat seluruh akun pengguna resmi, kunci otorisasi database Supabase, dan parameter integrasi layanan pihak ketiga yang aktif digunakan dalam sistem aplikasi **Rumah Literasi**.
 
 ---
 

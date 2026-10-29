@@ -21,7 +21,7 @@ export default function AuthLayout({
             <BookOpen className="h-5 w-5 stroke-[1.8]" />
           </div>
           <span className="font-serif text-2xl font-bold tracking-tight text-foreground">
-            Masyarakat Literasi
+            Rumah Literasi
           </span>
         </Link>
         <p className="mt-1.5 text-xs text-muted-foreground">
@@ -32,7 +32,7 @@ export default function AuthLayout({
       <div className="w-full max-w-md">{children}</div>
 
       <footer className="mt-8 text-center text-xs text-muted-foreground">
-        &copy; 2026 Masyarakat Literasi Indonesia
+        &copy; 2026 Rumah Literasi Indonesia
       </footer>
     </div>
   );

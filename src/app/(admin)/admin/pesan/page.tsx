@@ -7,7 +7,7 @@ import { ContactMessage } from "@/lib/dummy-data";
 
 export const metadata: Metadata = {
   title: "Pesan Kontak | Panel Admin",
-  description: "Manajemen pesan dan aspirasi kontak masuk dari pengunjung Masyarakat Literasi.",
+  description: "Manajemen pesan dan aspirasi kontak masuk dari pengunjung Rumah Literasi.",
 };
 
 export default async function AdminPesanPage() {

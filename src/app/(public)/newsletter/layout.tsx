@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Dapatkan kurasi wawasan bacaan, ringkasan esai pilihan, dan kabar materi belajar gratis langsung di WhatsApp Anda setiap pekan.",
   openGraph: {
-    title: "Berlangganan Buletin WhatsApp - Masyarakat Literasi",
+    title: "Berlangganan Buletin WhatsApp - Rumah Literasi",
     description:
       "Dapatkan kurasi wawasan bacaan, ringkasan esai pilihan, dan kabar materi belajar gratis langsung di WhatsApp Anda setiap pekan.",
   },

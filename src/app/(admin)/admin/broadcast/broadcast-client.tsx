@@ -176,7 +176,7 @@ export function AdminBroadcastClient({
             </span>
             <div className="rounded-md bg-emerald-50 border border-emerald-200 p-4 space-y-2 text-xs text-foreground shadow-xs">
               <div className="font-semibold text-emerald-900 border-b border-emerald-200 pb-1 flex items-center justify-between">
-                <span>Masyarakat Literasi Official</span>
+                <span>Rumah Literasi Official</span>
                 <span className="text-[10px] text-muted-foreground">Sekarang</span>
               </div>
               <p className="whitespace-pre-wrap leading-relaxed text-[12px]">

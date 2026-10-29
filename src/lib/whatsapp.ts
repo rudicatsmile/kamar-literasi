@@ -128,13 +128,13 @@ export async function sendDoubleOptInConfirmation(
   const greeting = name ? `Halo ${name}` : "Halo Sahabat";
   const message = `${greeting}! 📚✨
 
-Terima kasih telah mendaftar di Buletin WhatsApp *Masyarakat Literasi*.
+Terima kasih telah mendaftar di Buletin WhatsApp *Rumah Literasi*.
 
 Untuk mengaktifkan langganan buletin mingguan dan kurasi wawasan bacaan kritis Anda, mohon konfirmasi nomor ini dengan menekan tautan berikut:
 👉 ${confirmUrl}
 
 _Jika Anda tidak merasa mendaftarkan nomor ini, abaikan pesan ini atau balas "STOP"._
-Masyarakat Literasi Indonesia`;
+Rumah Literasi Indonesia`;
 
   return sendWhatsAppMessage({
     to: whatsapp,
@@ -167,7 +167,7 @@ Selesaikan bacaan dan catat 1-2 kalimat refleksimu malam ini di:
 👉 ${dashboardUrl}
 
 _"Membaca adalah napas bagi pikiran yang merdeka."_
-Masyarakat Literasi`;
+Rumah Literasi`;
 
   return sendWhatsAppMessage({
     to: whatsapp,

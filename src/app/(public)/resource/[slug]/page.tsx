@@ -35,7 +35,7 @@ export async function generateMetadata({
 
   if (!resource) {
     return {
-      title: "Materi Tidak Ditemukan - Masyarakat Literasi",
+      title: "Materi Tidak Ditemukan - Rumah Literasi",
     };
   }
 
@@ -43,13 +43,13 @@ export async function generateMetadata({
   const url = `${baseUrl}/resource/${resource.slug}`;
 
   return {
-    title: `${resource.title} - Resource Hub Masyarakat Literasi`,
+    title: `${resource.title} - Resource Hub Rumah Literasi`,
     description: resource.description,
     openGraph: {
       title: resource.title,
       description: resource.description,
       url,
-      siteName: "Masyarakat Literasi",
+      siteName: "Rumah Literasi",
       images: [
         {
           url: resource.cover_url,
@@ -169,7 +169,7 @@ export default async function DetailResourcePage({
           <div className="max-w-[68ch] text-base leading-relaxed text-foreground space-y-4">
             <p>{resource.description}</p>
             <p>
-              Materi ini telah dikurasi oleh tim Masyarakat Literasi untuk memastikan
+              Materi ini telah dikurasi oleh tim Rumah Literasi untuk memastikan
               kualitas informasi, kebebasan dari konten komersial terselubung, dan
               kesesuaian dengan kurikulum literasi nalar kritis di Indonesia.
             </p>

@@ -46,7 +46,7 @@ export default async function KonfirmasiNewsletterPage({
                 Double Opt-in Terverifikasi
               </Badge>
               <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                Selamat Datang di Buletin Masyarakat Literasi!
+                Selamat Datang di Buletin Rumah Literasi!
               </h1>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Nomor WhatsApp Anda ({subscriberInfo?.whatsapp ? `+${subscriberInfo.whatsapp}` : "terdaftar"}) telah aktif dan diverifikasi secara resmi.

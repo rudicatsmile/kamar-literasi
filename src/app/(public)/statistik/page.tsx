@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description:
     "Data indikator kunci, deret tren grafik membaca nasional, dan fakta terverifikasi mengenai potret literasi di Indonesia.",
   openGraph: {
-    title: "Statistik & Fakta Literasi Indonesia - Masyarakat Literasi",
+    title: "Statistik & Fakta Literasi Indonesia - Rumah Literasi",
     description:
       "Data indikator kunci, deret tren grafik membaca nasional, dan fakta terverifikasi mengenai potret literasi di Indonesia.",
   },
@@ -159,7 +159,7 @@ export default async function StatistikPage() {
         {/* Note on data transparency */}
         <div className="rounded-md border border-border bg-surface p-6 text-center text-xs text-muted-foreground">
           <p>
-            Masyarakat Literasi berkomitmen menyajikan data berbasis bukti.
+            Rumah Literasi berkomitmen menyajikan data berbasis bukti.
             Seluruh angka dikompilasi dari publikasi resmi pemerintah, asosiasi penerbit,
             dan riset independen yang dapat diverifikasi secara publik.
           </p>

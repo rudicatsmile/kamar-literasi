@@ -33,7 +33,7 @@ export async function generateMetadata({
 
   if (!challenge) {
     return {
-      title: "Tantangan Tidak Ditemukan - Masyarakat Literasi",
+      title: "Tantangan Tidak Ditemukan - Rumah Literasi",
     };
   }
 
@@ -41,13 +41,13 @@ export async function generateMetadata({
   const url = `${baseUrl}/mulai-sekarang/tantangan/${challenge.slug}`;
 
   return {
-    title: `${challenge.title} (${challenge.duration_days} Hari) - Masyarakat Literasi`,
+    title: `${challenge.title} (${challenge.duration_days} Hari) - Rumah Literasi`,
     description: challenge.description,
     openGraph: {
       title: challenge.title,
       description: challenge.description,
       url,
-      siteName: "Masyarakat Literasi",
+      siteName: "Rumah Literasi",
       images: [
         {
           url: challenge.cover_url,

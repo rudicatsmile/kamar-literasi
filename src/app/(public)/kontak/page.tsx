@@ -68,7 +68,7 @@ export default function KontakPage() {
             Mari Berkolaborasi untuk Nalar Bangsa
           </h1>
           <p className="mt-3 text-base text-muted-foreground leading-relaxed">
-            Punya gagasan tulisan, ingin mendonasikan buku ke taman bacaan desa, atau
+            Punya gagasan tulisan, ingin mendonasikan buku ke taman bacaan terbuka, atau
             mengundang fasilitator pelatihan berpikir kritis di sekolah Anda? Kami siap mendengar.
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function KontakPage() {
                       </label>
                       <Input
                         type="text"
-                        placeholder="Contoh: Siti Rahmawati"
+                        placeholder="Contoh: Rudi Kurniawan"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
@@ -248,7 +248,7 @@ export default function KontakPage() {
                     Apakah seluruh materi di website ini gratis?
                   </p>
                   <p>
-                    Ya, 100% materi dan tantangan di Masyarakat Literasi bebas diakses tanpa pungutan biaya.
+                    Ya, 100% materi dan tantangan di Rumah Literasi bebas diakses tanpa pungutan biaya.
                   </p>
                 </div>
                 <div>

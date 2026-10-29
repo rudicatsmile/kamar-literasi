@@ -1,5 +1,5 @@
 -- ==========================================================
--- MASYARAKAT LITERASI - INITIAL SEED DATA (VALID HEX UUIDs)
+-- Rumah Literasi - INITIAL SEED DATA (VALID HEX UUIDs)
 -- ==========================================================
 
 -- 1. KATEGORI (c0000000-...)
@@ -60,6 +60,6 @@ on conflict (challenge_id, day_number) do nothing;
 
 -- 6. HALAMAN STATIS
 insert into static_pages (slug, title, content) values
-  ('tentang', 'Tentang Kami - Masyarakat Literasi', 'Masyarakat Literasi lahir dari kegelisahan sederhana seputar banjir informasi dan dangkalnya nalar kritis di ruang publik Indonesia.'),
+  ('tentang', 'Tentang Kami - Rumah Literasi', 'Rumah Literasi lahir dari kegelisahan sederhana seputar banjir informasi dan dangkalnya nalar kritis di ruang publik Indonesia.'),
   ('visi-misi', 'Visi & Misi Organisasi', 'Terwujudnya masyarakat Indonesia yang cerdas bernalar, berwawasan luas, serta gemar membaca dan berkarya secara kritis.')
 on conflict (slug) do nothing;

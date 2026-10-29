@@ -41,7 +41,10 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { updateAboutPageAction } from "@/app/actions/pages";
+import {
+  updateAboutPageAction,
+  updateSectionHeadersAction,
+} from "@/app/actions/pages";
 import {
   OrganizationValue,
   TeamMember,
@@ -61,6 +64,10 @@ interface InitialPageData {
   story: string;
   visi: string;
   misi?: string[];
+  team_title?: string;
+  team_subtitle?: string;
+  values_title?: string;
+  values_subtitle?: string;
   values?: Array<{ title: string; desc: string }>;
   team?: Array<{ name: string; role: string; avatar: string }>;
 }
@@ -118,6 +125,25 @@ export function AdminHalamanClient({
   const [isSavingTeam, setIsSavingTeam] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
+  // Section Headers State
+  const [teamSectionTitle, setTeamSectionTitle] = React.useState(
+    initialData.team_title || "Pengurus Tim Penggerak & Redaksi"
+  );
+  const [teamSectionSubtitle, setTeamSectionSubtitle] = React.useState(
+    initialData.team_subtitle ||
+      "Daftar profil dan foto kurator/redaksi yang tampil di rute publik /tentang (tabel: team_members)"
+  );
+  const [isSavingTeamHeader, setIsSavingTeamHeader] = React.useState(false);
+
+  const [valuesSectionTitle, setValuesSectionTitle] = React.useState(
+    initialData.values_title || "Nilai-Nilai yang Kami Pegang Teguh"
+  );
+  const [valuesSectionSubtitle, setValuesSectionSubtitle] = React.useState(
+    initialData.values_subtitle ||
+      "Prinsip dan nilai luhur yang tampil di rute publik /tentang (tabel: nilai)"
+  );
+  const [isSavingValuesHeader, setIsSavingValuesHeader] = React.useState(false);
+
   React.useEffect(() => {
     setTentangTitle(initialData.title || "");
     setTentangSubtitle(initialData.subtitle || "");
@@ -128,6 +154,16 @@ export function AdminHalamanClient({
         ? initialData.misi
         : [""]
     );
+    setTeamSectionTitle(initialData.team_title || "Pengurus Tim Penggerak & Redaksi");
+    setTeamSectionSubtitle(
+      initialData.team_subtitle ||
+        "Daftar profil dan foto kurator/redaksi yang tampil di rute publik /tentang (tabel: team_members)"
+    );
+    setValuesSectionTitle(initialData.values_title || "Nilai-Nilai yang Kami Pegang Teguh");
+    setValuesSectionSubtitle(
+      initialData.values_subtitle ||
+        "Prinsip dan nilai luhur yang tampil di rute publik /tentang (tabel: nilai)"
+    );
   }, [initialData]);
 
   React.useEffect(() => {
@@ -137,6 +173,46 @@ export function AdminHalamanClient({
   React.useEffect(() => {
     setTeamList(initialTeam);
   }, [initialTeam]);
+
+  const handleSaveTeamHeader = async () => {
+    setIsSavingTeamHeader(true);
+    try {
+      const res = await updateSectionHeadersAction({
+        team_title: teamSectionTitle,
+        team_subtitle: teamSectionSubtitle,
+      });
+      if (!res.success) {
+        toast.error(res.error || "Gagal menyimpan judul bagian tim.");
+        return;
+      }
+      toast.success("Pengaturan judul dan deskripsi bagian Tim Redaksi berhasil disimpan ke database!");
+      router.refresh();
+    } catch {
+      toast.error("Terjadi kendala saat menyimpan judul bagian tim.");
+    } finally {
+      setIsSavingTeamHeader(false);
+    }
+  };
+
+  const handleSaveValuesHeader = async () => {
+    setIsSavingValuesHeader(true);
+    try {
+      const res = await updateSectionHeadersAction({
+        values_title: valuesSectionTitle,
+        values_subtitle: valuesSectionSubtitle,
+      });
+      if (!res.success) {
+        toast.error(res.error || "Gagal menyimpan judul bagian nilai.");
+        return;
+      }
+      toast.success("Pengaturan judul dan deskripsi bagian Nilai-Nilai berhasil disimpan ke database!");
+      router.refresh();
+    } catch {
+      toast.error("Terjadi kendala saat menyimpan judul bagian nilai.");
+    } finally {
+      setIsSavingValuesHeader(false);
+    }
+  };
 
   // Mission list handlers
   const handleMisiChange = (index: number, val: string) => {
@@ -427,7 +503,7 @@ export function AdminHalamanClient({
           Kelola Halaman Statis & Tim
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Sunting naskah profil organisasi, visi, misi, nilai-nilai, dan pengurus tim redaksi Masyarakat Literasi di PostgreSQL Supabase.
+          Sunting naskah profil organisasi, visi, misi, nilai-nilai, dan pengurus tim redaksi Rumah Literasi di PostgreSQL Supabase.
         </p>
       </div>
 
@@ -463,7 +539,7 @@ export function AdminHalamanClient({
                     Pernyataan Visi & Arah Strategis
                   </CardTitle>
                   <CardDescription className="text-xs text-muted-foreground mt-0.5">
-                    Rumusan visi dan butir-butir misi resmi gerakan Masyarakat Literasi yang langsung tampil di rute publik /tentang.
+                    Rumusan visi dan butir-butir misi resmi gerakan Rumah Literasi yang langsung tampil di rute publik /tentang.
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
@@ -657,11 +733,74 @@ export function AdminHalamanClient({
         {/* ================================================================== */}
         {/* TAB 3: NILAI-NILAI ORGANISASI */}
         {/* ================================================================== */}
-        <TabsContent value="nilai" className="space-y-4">
+        <TabsContent value="nilai" className="space-y-6">
+          {/* Card Pengaturan Judul & Keterangan Bagian Nilai */}
+          <Card className="border-border shadow-xs">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-serif text-base font-bold text-foreground flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                <span>Pengaturan Judul & Keterangan Bagian Nilai-Nilai</span>
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Kustomisasi judul dan kalimat pengantar yang tampil di atas daftar nilai pada halaman publik <code>/tentang</code>.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    Judul Bagian Nilai
+                  </label>
+                  <Input
+                    value={valuesSectionTitle}
+                    onChange={(e) => setValuesSectionTitle(e.target.value)}
+                    placeholder="Contoh: Nilai-Nilai yang Kami Pegang Teguh"
+                    className="text-sm"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    Keterangan / Subjudul Bagian Nilai
+                  </label>
+                  <Input
+                    value={valuesSectionSubtitle}
+                    onChange={(e) => setValuesSectionSubtitle(e.target.value)}
+                    placeholder="Contoh: Prinsip dan nilai luhur yang tampil di rute publik /tentang"
+                    className="text-sm"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end pt-1">
+                <Button
+                  onClick={handleSaveValuesHeader}
+                  disabled={isSavingValuesHeader}
+                  size="sm"
+                  className="gap-2"
+                >
+                  {isSavingValuesHeader ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Menyimpan Judul...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4" />
+                      <span>Simpan Judul & Keterangan Nilai</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section Daftar Nilai */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-md border border-border shadow-xs">
             <div>
-              <h3 className="font-serif text-lg font-bold text-foreground">
-                Daftar Nilai-Nilai Inti Organisasi
+              <h3 className="font-serif text-base font-bold text-foreground flex items-center gap-2">
+                <span>Daftar Nilai-Nilai Inti Organisasi</span>
+                <Badge variant="outline" className="text-xs font-sans">
+                  {valuesList.length} Nilai
+                </Badge>
               </h3>
               <p className="text-xs text-muted-foreground">
                 Prinsip dan nilai luhur yang tampil di rute publik /tentang (tabel: <code>nilai</code>).
@@ -724,14 +863,77 @@ export function AdminHalamanClient({
         {/* ================================================================== */}
         {/* TAB 4: TIM PENGGERAK & REDAKSI */}
         {/* ================================================================== */}
-        <TabsContent value="team" className="space-y-4">
+        <TabsContent value="team" className="space-y-6">
+          {/* Card Pengaturan Judul & Keterangan Bagian Tim */}
+          <Card className="border-border shadow-xs">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-serif text-base font-bold text-foreground flex items-center gap-2">
+                <Users className="h-4 w-4 text-primary" />
+                <span>Pengaturan Judul & Keterangan Bagian Tim Redaksi</span>
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Kustomisasi judul dan kalimat pengantar yang tampil di atas daftar tim pada halaman publik <code>/tentang</code>.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    Judul Bagian Tim
+                  </label>
+                  <Input
+                    value={teamSectionTitle}
+                    onChange={(e) => setTeamSectionTitle(e.target.value)}
+                    placeholder="Contoh: Pengurus Tim Penggerak & Redaksi"
+                    className="text-sm"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    Keterangan / Subjudul Bagian Tim
+                  </label>
+                  <Input
+                    value={teamSectionSubtitle}
+                    onChange={(e) => setTeamSectionSubtitle(e.target.value)}
+                    placeholder="Contoh: Daftar profil dan foto kurator/redaksi yang tampil di rute publik /tentang"
+                    className="text-sm"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end pt-1">
+                <Button
+                  onClick={handleSaveTeamHeader}
+                  disabled={isSavingTeamHeader}
+                  size="sm"
+                  className="gap-2"
+                >
+                  {isSavingTeamHeader ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Menyimpan Judul...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4" />
+                      <span>Simpan Judul & Keterangan Tim</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section Daftar Anggota Tim */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-md border border-border shadow-xs">
             <div>
-              <h3 className="font-serif text-lg font-bold text-foreground">
-                Pengurus Tim Penggerak & Redaksi
+              <h3 className="font-serif text-base font-bold text-foreground flex items-center gap-2">
+                <span>Daftar Anggota Tim Redaksi</span>
+                <Badge variant="outline" className="text-xs font-sans">
+                  {teamList.length} Orang
+                </Badge>
               </h3>
               <p className="text-xs text-muted-foreground">
-                Daftar profil dan foto kurator/redaksi yang tampil di rute publik /tentang (tabel: <code>team_members</code>).
+                Data anggota, jabatan, bio, dan foto kurator/redaksi (tabel: <code>team_members</code>).
               </p>
             </div>
             <Button onClick={openCreateTeam} size="sm" className="gap-2 shrink-0">
@@ -820,7 +1022,7 @@ export function AdminHalamanClient({
               <span>{editingValue ? "Edit Nilai Organisasi" : "Tambah Nilai Organisasi"}</span>
             </DialogTitle>
             <DialogDescription>
-              Prinsip integritas dan pedoman nilai yang dipegang teguh oleh Masyarakat Literasi.
+              Prinsip integritas dan pedoman nilai yang dipegang teguh oleh Rumah Literasi.
             </DialogDescription>
           </DialogHeader>
 
@@ -923,7 +1125,7 @@ export function AdminHalamanClient({
               <span>{editingTeam ? "Edit Anggota Tim" : "Tambah Anggota Tim"}</span>
             </DialogTitle>
             <DialogDescription>
-              Profil kurator, pengurus redaksi, dan fasilitator Masyarakat Literasi.
+              Profil kurator, pengurus redaksi, dan fasilitator Rumah Literasi.
             </DialogDescription>
           </DialogHeader>
 

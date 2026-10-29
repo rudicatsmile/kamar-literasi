@@ -68,7 +68,7 @@ export function MemberSidebarClient({
               <BookOpen className="h-4 w-4 stroke-[1.8]" />
             </div>
             <span className="font-serif font-bold text-foreground">
-              Masyarakat Literasi
+              Rumah Literasi
             </span>
           </Link>
         </div>
@@ -224,7 +224,7 @@ export function MemberSidebarClient({
             <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white p-6">
               <div className="flex items-center justify-between border-b border-border pb-4">
                 <span className="font-serif font-bold text-foreground">
-                  Masyarakat Literasi
+                  Rumah Literasi
                 </span>
                 <Button
                   variant="ghost"
