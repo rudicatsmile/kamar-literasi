@@ -449,11 +449,10 @@ export function AdminPenggunaClient({
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <div
-                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold text-xs ${
-                            isAdmin
+                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold text-xs ${isAdmin
                               ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
                               : "bg-blue-100 text-blue-800 border border-blue-200"
-                          }`}
+                            }`}
                         >
                           {isAdmin ? (
                             <ShieldCheck className="h-5 w-5" />
@@ -525,10 +524,10 @@ export function AdminPenggunaClient({
                         <span>
                           {u.createdAt
                             ? new Date(u.createdAt).toLocaleDateString("id-ID", {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              })
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })
                             : "-"}
                         </span>
                       </div>
@@ -570,8 +569,8 @@ export function AdminPenggunaClient({
                             isSelf
                               ? "Anda tidak dapat menghapus akun Anda sendiri"
                               : isAdmin && adminCount <= 1
-                              ? "Tidak dapat menghapus Administrator terakhir"
-                              : "Hapus Pengguna"
+                                ? "Tidak dapat menghapus Administrator terakhir"
+                                : "Hapus Pengguna"
                           }
                           className="h-8 px-2 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive disabled:opacity-30"
                         >
@@ -622,7 +621,7 @@ export function AdminPenggunaClient({
               </label>
               <Input
                 type="email"
-                placeholder="email@masyarakatliterasi.id"
+                placeholder="email@rumahliterasi.web.id"
                 value={createForm.email}
                 onChange={(e) =>
                   setCreateForm({ ...createForm, email: e.target.value })
