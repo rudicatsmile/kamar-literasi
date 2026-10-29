@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   UserCog,
@@ -19,6 +20,9 @@ import {
   Eye,
   EyeOff,
   CheckCircle2,
+  Upload,
+  X,
+  Camera,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,7 +51,15 @@ import {
   updateUserAction,
   resetUserPasswordAction,
   deleteUserAction,
+  uploadUserAvatarAction,
 } from "@/app/actions/users";
+
+function getInitials(name: string) {
+  if (!name) return "U";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 interface AdminPenggunaClientProps {
   initialUsers: AdminUser[];
@@ -79,6 +91,7 @@ export function AdminPenggunaClient({
     password: "",
     whatsapp: "",
     role: "member" as "admin" | "member",
+    avatarUrl: "",
   });
   const [showCreatePassword, setShowCreatePassword] = React.useState(false);
 
@@ -87,6 +100,7 @@ export function AdminPenggunaClient({
     fullName: "",
     whatsapp: "",
     role: "member" as "admin" | "member",
+    avatarUrl: "",
   });
 
   // Form states - Reset Password
@@ -95,6 +109,52 @@ export function AdminPenggunaClient({
 
   // Loading states
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [uploadingTarget, setUploadingTarget] = React.useState<"create" | "edit" | null>(null);
+
+  // Handle avatar upload
+  const handlePhotoChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    target: "create" | "edit"
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    e.target.value = "";
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Format foto harus JPG, JPEG, PNG, atau WEBP.");
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Ukuran foto maksimal 2 MB.");
+      return;
+    }
+
+    setUploadingTarget(target);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await uploadUserAvatarAction(formData);
+      if (!res.success || !res.url) {
+        toast.error(res.error || "Gagal mengunggah foto profil.");
+        return;
+      }
+
+      if (target === "create") {
+        setCreateForm((prev) => ({ ...prev, avatarUrl: res.url! }));
+      } else {
+        setEditForm((prev) => ({ ...prev, avatarUrl: res.url! }));
+      }
+      toast.success("Foto profil berhasil diunggah.");
+    } catch {
+      toast.error("Terjadi kesalahan sistem saat mengunggah foto.");
+    } finally {
+      setUploadingTarget(null);
+    }
+  };
 
   React.useEffect(() => {
     setUsers(initialUsers);
@@ -136,6 +196,7 @@ export function AdminPenggunaClient({
         password: createForm.password,
         whatsapp: createForm.whatsapp.trim() || undefined,
         role: createForm.role,
+        avatarUrl: createForm.avatarUrl.trim() || undefined,
       });
 
       if (!res.success) {
@@ -151,6 +212,7 @@ export function AdminPenggunaClient({
         password: "",
         whatsapp: "",
         role: "member",
+        avatarUrl: "",
       });
       router.refresh();
     } catch {
@@ -167,6 +229,7 @@ export function AdminPenggunaClient({
       fullName: user.fullName,
       whatsapp: user.whatsapp || "",
       role: user.role,
+      avatarUrl: user.avatarUrl || "",
     });
     setEditDialogOpen(true);
   };
@@ -187,6 +250,7 @@ export function AdminPenggunaClient({
         fullName: editForm.fullName.trim(),
         whatsapp: editForm.whatsapp.trim() || undefined,
         role: editForm.role,
+        avatarUrl: editForm.avatarUrl.trim() || null,
       });
 
       if (!res.success) {
@@ -448,18 +512,26 @@ export function AdminPenggunaClient({
                   <TableRow key={u.id} className="hover:bg-muted/30">
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div
-                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold text-xs ${isAdmin
-                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
-                              : "bg-blue-100 text-blue-800 border border-blue-200"
-                            }`}
-                        >
-                          {isAdmin ? (
-                            <ShieldCheck className="h-5 w-5" />
-                          ) : (
-                            <User className="h-5 w-5" />
-                          )}
-                        </div>
+                        {u.avatarUrl ? (
+                          <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden border border-border shadow-xs bg-muted">
+                            <Image
+                              src={u.avatarUrl}
+                              alt={u.fullName}
+                              fill
+                              sizes="40px"
+                              className="object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div
+                            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold text-xs uppercase tracking-wider ${isAdmin
+                                ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                                : "bg-blue-100 text-blue-800 border border-blue-200"
+                              }`}
+                          >
+                            {getInitials(u.fullName)}
+                          </div>
+                        )}
                         <div className="flex flex-col min-w-0">
                           <div className="flex items-center gap-1.5 flex-wrap">
                             <span className="font-semibold text-foreground text-sm truncate">
@@ -600,6 +672,70 @@ export function AdminPenggunaClient({
           </DialogHeader>
 
           <form onSubmit={handleCreateSubmit} className="space-y-4">
+            {/* Foto Profil */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-foreground">
+                Foto Profil (Opsional)
+              </label>
+              <div className="flex items-center gap-4 p-3 rounded-lg border border-border bg-muted/20">
+                <div className="relative h-16 w-16 rounded-full overflow-hidden border-2 border-border bg-muted flex items-center justify-center shrink-0 shadow-xs">
+                  {createForm.avatarUrl ? (
+                    <Image
+                      src={createForm.avatarUrl}
+                      alt="Preview Foto"
+                      fill
+                      sizes="64px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <Camera className="h-6 w-6 text-muted-foreground/60" />
+                  )}
+                  {uploadingTarget === "create" && (
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                      <Loader2 className="h-5 w-5 animate-spin text-white" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-1 space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <label className="cursor-pointer">
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        disabled={uploadingTarget !== null || isSubmitting}
+                        onChange={(e) => handlePhotoChange(e, "create")}
+                      />
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer">
+                        <Upload className="h-3.5 w-3.5" />
+                        {createForm.avatarUrl ? "Ganti Foto" : "Unggah Foto"}
+                      </span>
+                    </label>
+
+                    {createForm.avatarUrl && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          setCreateForm((prev) => ({ ...prev, avatarUrl: "" }))
+                        }
+                        disabled={uploadingTarget !== null || isSubmitting}
+                        className="h-7 px-2 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      >
+                        <X className="h-3.5 w-3.5 mr-1" />
+                        Hapus
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    Format JPG, JPEG, PNG, WEBP. Maksimal 2 MB.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-foreground">
                 Nama Lengkap <span className="text-destructive">*</span>
@@ -740,6 +876,70 @@ export function AdminPenggunaClient({
 
           {selectedUser && (
             <form onSubmit={handleEditSubmit} className="space-y-4">
+              {/* Foto Profil */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  Foto Profil
+                </label>
+                <div className="flex items-center gap-4 p-3 rounded-lg border border-border bg-muted/20">
+                  <div className="relative h-16 w-16 rounded-full overflow-hidden border-2 border-border bg-muted flex items-center justify-center shrink-0 shadow-xs">
+                    {editForm.avatarUrl ? (
+                      <Image
+                        src={editForm.avatarUrl}
+                        alt="Preview Foto"
+                        fill
+                        sizes="64px"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <Camera className="h-6 w-6 text-muted-foreground/60" />
+                    )}
+                    {uploadingTarget === "edit" && (
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                        <Loader2 className="h-5 w-5 animate-spin text-white" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex-1 space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <label className="cursor-pointer">
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          className="hidden"
+                          disabled={uploadingTarget !== null || isSubmitting}
+                          onChange={(e) => handlePhotoChange(e, "edit")}
+                        />
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer">
+                          <Upload className="h-3.5 w-3.5" />
+                          {editForm.avatarUrl ? "Ganti Foto" : "Unggah Foto"}
+                        </span>
+                      </label>
+
+                      {editForm.avatarUrl && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setEditForm((prev) => ({ ...prev, avatarUrl: "" }))
+                          }
+                          disabled={uploadingTarget !== null || isSubmitting}
+                          className="h-7 px-2 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <X className="h-3.5 w-3.5 mr-1" />
+                          Hapus Foto
+                        </Button>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">
+                      Format JPG, JPEG, PNG, WEBP. Maksimal 2 MB.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-foreground">
                   Nama Lengkap <span className="text-destructive">*</span>
