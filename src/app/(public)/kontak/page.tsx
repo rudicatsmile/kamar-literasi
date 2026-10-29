@@ -9,6 +9,7 @@ import {
   Send,
   CheckCircle2,
   HelpCircle,
+  Loader2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ export default function KontakPage() {
   const [subject, setSubject] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [isSent, setIsSent] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,19 +33,26 @@ export default function KontakPage() {
       return;
     }
 
-    const { submitContactMessageAction } = await import("@/app/actions/contact");
-    const result = await submitContactMessageAction({
-      name,
-      email,
-      subject,
-      message,
-    });
+    setIsSubmitting(true);
+    try {
+      const { submitContactMessageAction } = await import("@/app/actions/contact");
+      const result = await submitContactMessageAction({
+        name,
+        email,
+        subject,
+        message,
+      });
 
-    if (!result.success && result.error) {
-      toast.error(result.error);
-    } else {
-      setIsSent(true);
-      toast.success("Pesan Anda telah diterima oleh Tim Redaksi. Kami akan membalas via email dalam 1x24 jam.");
+      if (!result.success && result.error) {
+        toast.error(result.error);
+      } else {
+        setIsSent(true);
+        toast.success("Pesan Anda telah diterima oleh Tim Redaksi. Kami akan membalas via email dalam 1x24 jam.");
+      }
+    } catch {
+      toast.error("Terjadi kendala saat mengirim pesan.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -157,9 +166,23 @@ export default function KontakPage() {
                     <input type="text" name="_hp_check" tabIndex={-1} autoComplete="off" />
                   </div>
 
-                  <Button type="submit" size="lg" className="w-full gap-2">
-                    <Send className="h-4 w-4" />
-                    <span>Kirim Pesan Sekarang</span>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={isSubmitting}
+                    className="w-full gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Mengirim Pesan...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="h-4 w-4" />
+                        <span>Kirim Pesan Sekarang</span>
+                      </>
+                    )}
                   </Button>
 
                   <p className="text-[11px] text-muted-foreground text-center">
